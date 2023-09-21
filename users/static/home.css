@@ -1,0 +1,406 @@
+this is the final css code body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Image Slider */
+  .slider-container {
+    position: relative;
+    height: 100vh; /* Set the slider container to fill the entire viewport height */
+    background-image: url('https://images.unsplash.com/photo-1604147706283-d7119b5b822c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80');
+    background-size: cover; /* Make the background image cover the container */
+    background-position: center;
+    background-attachment: fixed; /* Keep the background image fixed while the content scrolls */
+    /* overflow: hidden; */
+  }
+  
+  .slider {
+    display: flex;
+    overflow: hidden;
+  }
+  
+  .slider img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s ease;
+  }
+  
+  /* Slider Text */
+  .slider-text {
+    position: absolute;
+    margin-top: 100px;
+    top:10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Search Bar */
+  .search-container {
+    position: absolute;
+    top: 37%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 80%;
+    max-width: 600px;
+  }
+  
+  .search-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  
+  .dropdowns {
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .dropdowns select {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Result Cards Container */
+.result-cards-container {
+    position: absolute;
+    max-height: 600px;
+    overflow-y: auto;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px; /* Adjust the gap between result cards as needed */
+    margin-top: 120px
+  }
+  
+  /* Result Card */
+  .result-card {
+    text-align: left;
+    width: 80%;
+    max-width: 600px;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .result-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-right: 20px;
+  }
+  
+  .result-info {
+    flex: 1;
+  }
+  
+  .result-info h2 {
+    margin-bottom: 10px;
+  }
+  
+  .buttons {
+    margin-top: 20px;
+  }
+  
+  .buttons button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Modals */
+  .modal-dialog {
+    max-width: 800px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+  
+  .modal-body iframe {
+    width: 100%;
+    height: 400px;
+  }
+  
+  .modal-body p {
+    margin-bottom: 15px;
+  }
+  
+  /* Carousel */
+  .carousel-inner img {
+    width: 100%;
+    height: 400px;
+  }
+  
+
+
+  /* Sorting Card */
+.sorting-card {
+    position: absolute;
+    top: 44.5%;
+    left: 200px;
+    z-index: 2;
+    /* margin-top : 50px ;
+    margin-left: 150px ; */
+    width: 200px; /* Adjust the width of the sorting card as needed */
+    background-color: #f0f0f0;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .sorting-card h2 {
+    margin-bottom: 10px;
+  }
+  
+  .sorting-card label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .sorting-card select {
+    width: 100%;
+    padding: 5px;
+  }
+
+
+  /* Existing CSS styles for other elements */
+
+/* Header Bar */
+.header {
+    position: sticky;
+    top: 0;
+    background-color: #333;
+    padding: 10px 0;
+  }
+  
+  .header-menu {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .header-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .header-menu li {
+    display: inline-block;
+    margin-left: 20px;
+  }
+  
+  .header-menu a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+  }
+  
+  .header-menu a:hover {
+    background-color: #555;
+  }
+  
+
+  /* media queries for different phone screen sizes */
+
+  @media screen and (max-width: 780px) {
+    /* Styles for smaller screens */
+    .sorting-card {
+        position: absolute;
+        top: 35%;
+        left: 0px;
+        z-index: 2;
+        width: 100%;
+        background-color: #007bff;
+        padding: 15px;
+        /* margin: 10px; */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .sorting-card label {
+      display: block;
+      margin-bottom: 5px;
+      color: white;
+    }
+
+    /* #styles header */
+    .header {
+        position: sticky;
+        top: 0;
+        background-color: #333;
+        padding: 10px 0;
+        width : 100%;
+      }
+      
+      .header-menu {
+        display: flex;
+        justify-content: flex-end;
+      }
+      
+      .header-menu ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .header-menu li {
+        display: inline-block;
+        margin-left: 20px;
+      }
+      
+      .header-menu a {
+        color: #fff;
+        text-decoration: none;
+        padding: 5px 10px;
+      }
+      
+      .header-menu a:hover {
+        background-color: #555;
+      }
+
+      .slider {
+        display: flex;
+        overflow: hidden;
+        height: 40%;
+      }
+       
+  /* Slider Text */
+  .slider-text {
+    position: absolute;
+    margin-top: 10px;
+    /* top:10%;
+    left: 50%; */
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+      /* styles for search bar */
+
+      /* Search Bar */
+  .search-container {
+    position: absolute;
+    /* top: 37%; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+    margin-top: -120px;
+    /* max-width: 600px; */
+  }
+  
+  .search-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    /* margin-top: 1px; */
+  }
+  
+  .dropdowns {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+  }
+  
+  .dropdowns select {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Result Cards Container */
+.result-cards-container {
+    position: absolute;
+    max-height: 600px;
+    overflow-y: auto;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: stretch; */
+    gap: 20px;
+    width: 100%;
+    margin-top: 110px;
+}
+/* Result Card */
+  .result-card {
+    text-align: left;
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+    /* max-width: 600px; */
+    background-color: #f0f0f0;
+    display: flex;
+    /* padding: 15px; */
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+  
+  .result-card img {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+  align-self: flex-start; /* This aligns the image to the top of the card */
+  margin-right: 20px;
+  }
+  
+  .result-info {
+    flex: 1;
+  }
+  
+  .result-info h2 {
+    margin-bottom: 10px;
+  }
+  
+  .buttons {
+    margin-top: 20px;
+  }
+  
+  .buttons button {
+    margin-right: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  }
+  
+
+
+  
+  
+  
+  
+  
