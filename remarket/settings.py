@@ -17,7 +17,6 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -28,7 +27,6 @@ SECRET_KEY = "django-insecure-w+s*+%j!n&oi$&te*^%vs)x!1u!xh(bxc)+_h$r@#96j)5=agb
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 
 # Application definition
@@ -68,9 +66,11 @@ MIDDLEWARE = [
 
 
 # CORS_ALLOW_ALL_ORIGINS = False  # Set to True to allow all origins (not recommended for production)
-CORS_ALLOW_CREDENTIALS = True   # Set to True if your frontend sends credentials (e.g., cookies)
+# Set to True if your frontend sends credentials (e.g., cookies)
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [       # Add the origins you want to allow
     "http://localhost:1738",  # Add your local development server
+    "http://127.0.0.1:1738",  # Add your local development server
 ]
 
 
@@ -132,9 +132,9 @@ REST_FRAMEWORK = {
 }
 
 
-
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # Set the desired expiration time
+    # Set the desired expiration time
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 
@@ -173,5 +173,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'your-gmail-email@gmail.com'  # Your Gmail email address
-EMAIL_HOST_PASSWORD = 'your-gmail-password'  # Your Gmail password or an app-specific password
-
+# Your Gmail password or an app-specific password
+EMAIL_HOST_PASSWORD = 'your-gmail-password'

@@ -19,34 +19,59 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import path
-from users.views import user_login ,UserRegisterView ,custom_password_reset_view , user_logout
+from users.views import user_login, UserRegisterView, custom_password_reset_view, user_logout
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from users.views import RealtorBankDetailsViewSet ,GetLocationPriceTypeNamesAndIds , PropertyListingViewSet , ViewSettlementTransactionDataViewSet , property_search_sort_filter ,landing_page
+from users.views import RealtorBankDetailsViewSet, GetLocationPriceTypeNamesAndIds, PropertyListingViewSet, ViewSettlementTransactionDataViewSet, property_search_sort_filter, landing_page
 
 router = DefaultRouter()
 router.register(r'realtor-bank-details', RealtorBankDetailsViewSet)
 router.register(r'listing', PropertyListingViewSet)
 router.register(r'transactions', ViewSettlementTransactionDataViewSet)
 
-
+admin.site.site_header = 'RealestMarket Realtor Dashboard'
+admin.site.site_title = 'The gateway to the RealestMarket Backend'
+admin.site.index_title = 'Realtor Dashboard'
 
 urlpatterns = [
-    path("", landing_page , name = 'home'),
+    path("", landing_page, name='home'),
+    # Admin urls
+    path(
+        "admin/password_reset/",
+        auth_views.PasswordResetView.as_view(),
+        name="admin_password_reset",
+    ),
+    path(
+        "admin/password_reset/done/",
+        auth_views.PasswordResetDoneView.as_view(),
+        name="password_reset_done",
+    ),
+    path(
+        "reset/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    path(
+        "reset/done/",
+        auth_views.PasswordResetCompleteView.as_view(),
+        name="password_reset_complete",
+    ),
     path("admin/", admin.site.urls),
 
-    #User urls  
+    # User urls
     path('login', user_login, name='user_login'),
     path('logout', user_logout, name='user_logut'),
-    path('register',UserRegisterView.as_view(), name='register'),
+    path('register', UserRegisterView.as_view(), name='register'),
     path('reset-password/', custom_password_reset_view, name='reset-password'),
 
-    #CRUB apis bankdetails 
+    # CRUD apis bankdetails
     path('api/', include(router.urls)),
 
-    path('options',GetLocationPriceTypeNamesAndIds.as_view({'get': 'list'}), name='options'),
+    path('options', GetLocationPriceTypeNamesAndIds.as_view(
+        {'get': 'list'}), name='options'),
     path('search/', property_search_sort_filter, name='search')
 
 

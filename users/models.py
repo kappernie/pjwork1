@@ -12,7 +12,7 @@ class Realtor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     onboarding_completed = models.BooleanField(default=False)
     Bank_details = models.TextField( null=True , blank=True)
-    business_document = models.FilePathField(path = 'uploads/' ,  null=True , blank=True)
+    business_document = models.FilePathField(path = 'media/uploads/documents' ,  null=True , blank=True)
 
     def __str__(self):
         return self.user.username
