@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from .serializers import UserSerializer
-from .models import Realtor, Renter
+from .models import Lister, Renter
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.views import PasswordResetView
@@ -55,7 +55,8 @@ def user_login(request):
     # Get user credentials from the request data
     email = request.data.get('email')
     password = request.data.get('password')
-    print(email)
+    user_type = int(request.data.get('user_type'))
+    print(email, user_type)
     # Check if user exists
     if (User.objects.filter(email=email).exists()):
         username = User.objects.filter(email=email)[0].username
@@ -66,14 +67,32 @@ def user_login(request):
     user = authenticate(username=username, password=password)
     if user is not None:
         resp = {'success': "true"}
-        try:
-            if Renter.objects.get(user=user) != None:
-                resp['first_name'] = user.first_name
-                resp['last_name'] = user.last_name
-                resp['is_active'] = "true" if user.is_active == 1 else "False"
-        except:
-            resp['business_name'] = "x"
-            resp['business_verified'] = "False"
+        # print(Lister.objects.get(user=user, classification='owner')      != None, user_type == 2)
+        if Renter.objects.filter(user=user).exists() and user_type == 1:
+            resp['first_name'] = user.first_name
+            resp['last_name'] = user.last_name
+            resp['email'] = user.email
+            resp['is_active'] = bool(user.is_active)
+        elif Lister.objects.filter(user=user, classification='owner').exists() and user_type == 2:
+            owner = Lister.objects.filter(
+                user=user, classification='owner')[0]
+            resp['first_name'] = user.first_name
+            resp['last_name'] = user.last_name
+            resp['email'] = user.email
+            resp['is_active'] = bool(user.is_active)
+            resp['role'] = owner.classification
+            resp['onboarded'] = bool(owner.onboarding_completed)
+        elif Lister.objects.filter(user=user, classification='agent').exists() and user_type == 3:
+            agent = Lister.objects.filter(
+                user=user, classification='agent')[0]
+            resp['first_name'] = user.first_name
+            resp['last_name'] = user.last_name
+            resp['email'] = user.email
+            resp['is_active'] = bool(user.is_active)
+            resp['role'] = agent.classification
+            resp['onboarded'] = bool(agent.onboarding_completed)
+        else:
+            return Response({'error': 'Please select the right role'}, status=400)
         # Generate or retrieve the authentication token for the user
         token, created = Token.objects.get_or_create(user=user)
         # Return authentication token in the response
@@ -97,7 +116,7 @@ def user_logout(request):
 
 # CRUD for Realtor bank details
 class RealtorBankDetailsViewSet(viewsets.ModelViewSet):
-    queryset = Realtor.objects.all()
+    queryset = Lister.objects.all()
     serializer_class = RealtorBankDetailsSerializer
     # permission_classes = [IsAuthenticated]  # Require authentication for all operations
 
@@ -106,7 +125,7 @@ class RealtorBankDetailsViewSet(viewsets.ModelViewSet):
         # grab the auth id and fetch bank details for th customer
         msg = getAuthUserId(request)
         if not msg['error']:
-            realtor = Realtor.objects.get(user=msg['id'])
+            realtor = Lister.objects.get(user=msg['id'])
             # print(realtor.Bank_details.value())
             serializer = RealtorBankDetailsSerializer(realtor)
             return Response(serializer.data)
@@ -117,7 +136,7 @@ class RealtorBankDetailsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         msg = getAuthUserId(request)
         if serializer.is_valid() and not msg['error']:
-            Realtor.objects.filter(user_id=msg['id']).update(
+            Lister.objects.filter(user_id=msg['id']).update(
                 Bank_details=serializer['Bank_details'])
             return Response({'success': "true"})
         return Response({'error': msg['msg']}, status=400)
@@ -126,7 +145,7 @@ class RealtorBankDetailsViewSet(viewsets.ModelViewSet):
         # handle deletion ,clearing of bank details
         msg = getAuthUserId(request)
         if not msg['error']:
-            realtor = Realtor.objects.get(user=msg['id'])
+            realtor = Lister.objects.get(user=msg['id'])
             realtor.Bank_details = None
             realtor.save()
             return Response(status=204)
@@ -136,7 +155,7 @@ class RealtorBankDetailsViewSet(viewsets.ModelViewSet):
 
 
 class RealtorBusinessDocumentViewSet(viewsets.ModelViewSet):
-    queryset = Realtor.objects.all()
+    queryset = Lister.objects.all()
     serializer_class = RealtorBusinessDoucmentSerializer
     # permission_classes = [IsAuthenticated]  # Require authentication for all operations
 
@@ -145,7 +164,7 @@ class RealtorBusinessDocumentViewSet(viewsets.ModelViewSet):
         # grab the auth id and fetch bank details for th customer
         msg = getAuthUserId(request)
         if not msg['error']:
-            realtor = Realtor.objects.get(user=msg['id'])
+            realtor = Lister.objects.get(user=msg['id'])
             # print(realtor.Bank_details.value())
             serializer = RealtorBankDetailsSerializer(realtor)
             return Response(serializer.data)
@@ -156,7 +175,7 @@ class RealtorBusinessDocumentViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         msg = getAuthUserId(request)
         if serializer.is_valid() and not msg['error']:
-            Realtor.objects.filter(user_id=msg['id']).update(
+            Lister.objects.filter(user_id=msg['id']).update(
                 Bank_details=serializer['Bank_details'])
             return Response({'success': "true"})
         return Response({'error': msg['msg']}, status=400)
@@ -165,7 +184,7 @@ class RealtorBusinessDocumentViewSet(viewsets.ModelViewSet):
         # handle deletion ,clearing of bank details
         msg = getAuthUserId(request)
         if not msg['error']:
-            realtor = Realtor.objects.get(user=msg['id'])
+            realtor = Lister.objects.get(user=msg['id'])
             realtor.Bank_details = None
             realtor.save()
             return Response(status=204)
@@ -200,7 +219,7 @@ class PropertyListingViewSet(viewsets.ModelViewSet):
                   request.data['image1'], request.data['image1']]
         msg = getAuthUserId(request)
         if serializer.is_valid() and not msg['error']:
-            serializer.validated_data['realtor'] = Realtor.objects.get(
+            serializer.validated_data['realtor'] = Lister.objects.get(
                 user_id=msg['id'])
             instance = serializer.save()
             for img in images:  # upload images after creating the instance of the property
@@ -215,7 +234,7 @@ class PropertyListingViewSet(viewsets.ModelViewSet):
         # handle deletion of  unpublished  of listings   * condition is , they should not be published
         msg = getAuthUserId(request)
         if not msg['error']:
-            realtor = Realtor.objects.get(user=msg['id'])
+            realtor = Lister.objects.get(user=msg['id'])
             Property.objects.filter(
                 realtor=realtor, pk=pk, is_published=0).delete()
             return Response(status=204)

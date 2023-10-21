@@ -24,12 +24,14 @@
     <header class="header">
       <nav class="header-menu">
         <ul class="header-nav">
-          <li>
+          <!-- <li>
             <a href="/admin" target="_blank" class="realtor-redirect"
               >Realtor log in</a
-            >
+            > -->
+          <!-- </li> -->
+          <li>
+            <a href="#" class="renter-sign-in-button">Login or Sign up</a>
           </li>
-          <li><a href="#" class="renter-sign-in-button">Renter log in</a></li>
         </ul>
       </nav>
     </header>
@@ -281,7 +283,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="viewMoreModalLabel">
-              Renter Log-in/Register on RealestMarket
+              Log in/Sign up on RealestMarket
             </h5>
             <button
               type="button"
@@ -292,6 +294,53 @@
           </div>
           <div class="modal-body">
             <form class="authform">
+              <!-- Renter/Owner/Agent -->
+              <div class="text-muted mb-1">
+                Please choose one of the roles below.
+              </div>
+
+              <div class="mb-2">
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="userType"
+                    id="renterRadio"
+                    value="1"
+                    required
+                  />
+                  <label class="form-check-label" for="renterRadio">
+                    Renter
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="userType"
+                    id="ownerRadio"
+                    value="2"
+                    required
+                  />
+                  <label class="form-check-label" for="ownerRadio">
+                    Owner
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="userType"
+                    id="agentRadio"
+                    value="3"
+                    required
+                  />
+                  <label class="form-check-label" for="agentRadio">
+                    Agent
+                  </label>
+                </div>
+              </div>
+
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email</label>
                 <input
@@ -351,7 +400,12 @@
               <button type="submit" class="btn btn-primary" id="sign_in">
                 Sign in
               </button>
-              <button type="submit" class="btn btn-primary" id="sign_up">
+              <button
+                disabled
+                type="submit"
+                class="btn btn-primary"
+                id="sign_up"
+              >
                 Sign up
               </button>
             </form>

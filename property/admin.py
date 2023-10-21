@@ -10,7 +10,7 @@ class LocationAdmin(admin.ModelAdmin):
 
 @admin.register(models.Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = ['name', 'realtor', 'property_types', 'currency',
+    list_display = ['name', 'lister', 'property_types', 'currency',
                     'price', 'location_text', 'location_modified', 'is_published']
 
     @admin.display(description='Location')

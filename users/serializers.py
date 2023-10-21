@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Realtor, Renter
+from .models import Lister, Renter
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.hashers import make_password
@@ -12,7 +12,7 @@ from payments.models import Payment
 
 
 class UserSerializer(serializers.ModelSerializer):
-    user_type = serializers.IntegerField()  # 1: realtor, 2: renter
+    user_type = serializers.IntegerField()  # 1: renter, 2: owner 3: agent
 
     class Meta:
         model = User
@@ -30,10 +30,12 @@ class UserSerializer(serializers.ModelSerializer):
         user = super().create(validated_data)  # create the user instance
         # depending on the type of user siging up
         if user_type == 1:
-            Realtor.objects.create(user=user)
+            Renter.objects.create(user=user)
             # send_realtor_account_creation_mail()
         elif user_type == 2:
-            Renter.objects.create(user=user)
+            Lister.objects.create(user=user, classification='owner')
+        elif user_type == 3:
+            Lister.objects.create(user=user, classification='agent')
             # send_renter_verification_mail()
         # Assign the custom field to the user instance since it is a model serializer
         user.user_type = user_type
@@ -42,13 +44,13 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RealtorBankDetailsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Realtor
+        model = Lister
         fields = ['Bank_details']
 
 
 class RealtorBusinessDoucmentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Realtor
+        model = Lister
         fields = ['business_document']
 
 

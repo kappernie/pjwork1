@@ -79,8 +79,9 @@ this is the final css code body {
 .result-cards-container {
   position: absolute;
   max-height: 600px;
+  min-width: 574px;
   overflow-y: auto;
-  top: 70%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -93,7 +94,7 @@ this is the final css code body {
 /* Result Card */
 .result-card {
   text-align: left;
-  width: 80%;
+  width: 100%;
   max-width: 600px;
   background-color: #f0f0f0;
   display: flex;
@@ -338,7 +339,7 @@ this is the final css code body {
     position: absolute;
     max-height: 600px;
     overflow-y: auto;
-    top: 70%;
+    top: 46%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
@@ -346,7 +347,8 @@ this is the final css code body {
     /* justify-content: stretch; */
     gap: 20px;
     width: 100%;
-    margin-top: 110px;
+    margin-top: 0;
+    min-width: unset;
   }
   /* Result Card */
   .result-card {

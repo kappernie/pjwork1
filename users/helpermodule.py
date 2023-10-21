@@ -1,7 +1,7 @@
 
 from django.core.mail import send_mail
 from rest_framework.authtoken.models import Token
-from .models import Realtor, Renter
+from .models import Lister, Renter
 
 
 def send_renter_verification_mail(recipient, first_name, last_name):

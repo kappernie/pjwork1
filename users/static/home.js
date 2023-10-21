@@ -159,15 +159,15 @@ $(document).ready(function () {
     const RenterModal = document.querySelector(".renter-sign-in-button");
     // const RealtorRedirect = document.querySelector('.realtor-redirect');
     const purchasedModal = document.querySelector(".purhcased");
-    signUpChecker = document.querySelector(".form-check-input");
-    firstname = document.querySelector("#inputfirstname");
-    lastname = document.querySelector("#inputlastname");
-    email = document.querySelector("#exampleInputEmail1");
-    password = document.querySelector("#exampleInputPassword1");
-    signInBtn = document.querySelector("#sign_in");
-    signUpBtn = document.querySelector("#sign_up");
-    header = document.querySelector(".header-nav");
-    purchasemodal = document.querySelector("#purchasedModal");
+    // signUpChecker = document.querySelector(".form-check-input");
+    const firstname = document.querySelector("#inputfirstname");
+    const lastname = document.querySelector("#inputlastname");
+    const email = document.querySelector("#exampleInputEmail1");
+    const password = document.querySelector("#exampleInputPassword1");
+    const signInBtn = document.querySelector("#sign_in");
+    const signUpBtn = document.querySelector("#sign_up");
+    const header = document.querySelector(".header-nav");
+    const purchasemodal = document.querySelector("#purchasedModal");
 
     // add event listener for sign up  checker
 
@@ -182,25 +182,52 @@ $(document).ready(function () {
     //   }
     // });
 
+    // Initialize a variable to track the checkbox state
+    var checkboxChecked = false;
+
     // Reset field states when modal is hidden
     $("#signInModal").on("hidden.bs.modal", function () {
-      $(".form-check-input").prop("checked", false);
-
-      // Disable the fields (assuming you have input fields with IDs 'field1' and 'field2')
-      $("#inputfirstname").prop("disabled", true);
-      $("#inputlastname").prop("disabled", true);
+      $("#exampleCheck1[type='checkbox']").prop("checked", false);
+      checkboxChecked = false; // Reset the variable
+      updateFieldsState(); // Update field states
     });
 
     // Enable/disable fields based on checkbox state
-    $(".form-check-input").change(function () {
-      if ($(this).is(":checked")) {
+    $("#exampleCheck1[type='checkbox']").change(function () {
+      checkboxChecked = $(this).is(":checked");
+      updateFieldsState(); // Update field states
+    });
+
+    // Prevent radio buttons from enabling/disabling fields if checkbox is not checked
+    $("#agentRadio[type='radio']").change(function () {
+      if (!checkboxChecked) {
+        return false;
+      }
+    });
+    $("#renterRadio[type='radio']").change(function () {
+      if (!checkboxChecked) {
+        return false;
+      }
+    });
+    $("#ownerRadio[type='radio']").change(function () {
+      if (!checkboxChecked) {
+        return false;
+      }
+    });
+
+    function updateFieldsState() {
+      if (checkboxChecked) {
         $("#inputfirstname").prop("disabled", false);
         $("#inputlastname").prop("disabled", false);
+        $("#sign_up").prop("disabled", false);
+        $("#sign_in").prop("disabled", true);
       } else {
         $("#inputfirstname").prop("disabled", true);
         $("#inputlastname").prop("disabled", true);
+        $("#sign_up").prop("disabled", true);
+        $("#sign_in").prop("disabled", false);
       }
-    });
+    }
 
     function showToast(message, success = true) {
       // Get the toast element
@@ -238,6 +265,11 @@ $(document).ready(function () {
       signInBtn.addEventListener("click", function (event) {
         // on successful sign in hide modal
 
+        const radioButtons = Array.from(
+          document.querySelectorAll('input[name="userType"')
+        );
+        const userType = radioButtons.find((radio) => radio.checked);
+
         const isFormValid = form.checkValidity();
         if (isFormValid) {
           $.post(
@@ -245,6 +277,7 @@ $(document).ready(function () {
             {
               email: email.value,
               password: password.value,
+              user_type: userType.value,
             },
             function (data) {
               const key = " remarket";
@@ -321,6 +354,11 @@ $(document).ready(function () {
           const username = generateUsername(email.value);
           const password = document.querySelector("#exampleInputPassword1");
 
+          const radioButtons = Array.from(
+            document.querySelectorAll('input[name="userType"')
+          );
+          const userType = radioButtons.find((radio) => radio.checked);
+
           fetch("http://localhost:1738/register", {
             method: "post",
             headers: {
@@ -332,7 +370,7 @@ $(document).ready(function () {
               last_name: lastName.value,
               username: username,
               password: password.value,
-              user_type: 2,
+              user_type: userType.value,
             }),
           }).then(async (res) => {
             if (res.ok) {
@@ -340,6 +378,8 @@ $(document).ready(function () {
               form.reset(); //reset form
               firstName.setAttribute("disabled", true);
               lastName.setAttribute("disabled", true);
+              $("#sign_in").prop("disabled", false);
+              $("#sign_up").prop("disabled", true);
             } else {
               let errorMessage = await res.json();
               if (typeof errorMessage === "object") {
@@ -398,6 +438,10 @@ $(document).ready(function () {
 
           document.getElementById("amount").value = apiResponse.price;
         });
+        const userDetails = JSON.parse(localStorage.getItem("remarket"));
+        document.getElementById("email-address").value = userDetails.email;
+        document.getElementById("first-name").value = userDetails.first_name;
+        document.getElementById("last-name").value = userDetails.last_name;
         // get the details  from api ; amount of the property in this case
         // update the amount of the generic purchase template
         // Show the update purchase  Modal
@@ -415,9 +459,9 @@ $(document).ready(function () {
   const searchButton = document.querySelector(".search-button"); // get search button
   const resultDiv = document.querySelector("#cards-section"); // get listings  cards
   searchButton.addEventListener("click", function () {
-    const location = document.querySelector(".location-dropdown").value;
-    const price = document.querySelector(".price-dropdown").value;
-    const type = document.querySelector(".type-dropdown").value;
+    // const location = document.querySelector(".location-dropdown").value;
+    // const price = document.querySelector(".price-dropdown").value;
+    // const type = document.querySelector(".type-dropdown").value;
     const searchValue = document.querySelector(".search-field").value;
     query = `http://localhost:1738/search?search=${searchValue}`;
     // &location=${location}&type=${type}

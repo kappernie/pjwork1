@@ -3,14 +3,14 @@ from django.apps import apps
 from . import models
 
 
-@admin.register(models.Agent)
-class AgentAdmin(admin.ModelAdmin):
-    list_display = ['user', 'verified']
+# @admin.register(models.Agent)
+# class AgentAdmin(admin.ModelAdmin):
+#     list_display = ['user', 'verified']
 
 
-@admin.register(models.Realtor)
-class RealtorAdmin(admin.ModelAdmin):
-    list_display = ['user', 'onboarding_completed']
+@admin.register(models.Lister)
+class ListerAdmin(admin.ModelAdmin):
+    list_display = ['user', 'onboarding_completed', 'classification']
 
 
 @admin.register(models.Renter)

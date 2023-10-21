@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import Realtor
+from users.models import Lister
 
 
 class PropertyType(models.Model):
@@ -44,7 +44,7 @@ class Property(models.Model):
     property_types = models.ForeignKey(
         PropertyType, on_delete=models.CASCADE,  null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    realtor = models.ForeignKey(Realtor, on_delete=models.CASCADE)
+    lister = models.ForeignKey(Lister, null=True, on_delete=models.CASCADE)
     currency = models.CharField(
         max_length=200, choices=CURRENCY_CHOICES, null=True)
     description = models.TextField(max_length=10000, null=True, blank=True)
