@@ -32,9 +32,9 @@ router.register(r'realtor-bank-details', RealtorBankDetailsViewSet)
 router.register(r'listing', PropertyListingViewSet)
 router.register(r'transactions', ViewSettlementTransactionDataViewSet)
 
-admin.site.site_header = 'RealestMarket Realtor Dashboard'
-admin.site.site_title = 'The gateway to the RealestMarket Backend'
-admin.site.index_title = 'Realtor Dashboard'
+admin.site.site_header = 'ReMarket Admin Dashboard'
+admin.site.site_title = 'The gateway to the ReMarket Backend'
+admin.site.index_title = 'Admin Dashboard'
 
 urlpatterns = [
     path("", landing_page, name='home'),

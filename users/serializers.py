@@ -13,11 +13,12 @@ from payments.models import Payment
 
 class UserSerializer(serializers.ModelSerializer):
     user_type = serializers.IntegerField()  # 1: renter, 2: owner 3: agent
+    phone = serializers.CharField()  # 1: renter, 2: owner 3: agent
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password',
-                  'user_type', 'first_name', 'last_name']
+                  'user_type', 'first_name', 'last_name', 'phone']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -26,19 +27,23 @@ class UserSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=validated_data['email']).exists():
             raise serializers.ValidationError('User already exists')
         user_type = validated_data.pop('user_type', None)  # remove user type
+        phone = validated_data.pop('phone', '')
         validated_data['password'] = make_password(validated_data['password'])
         user = super().create(validated_data)  # create the user instance
         # depending on the type of user siging up
         if user_type == 1:
-            Renter.objects.create(user=user)
+            Renter.objects.create(user=user, phone=phone)
             # send_realtor_account_creation_mail()
         elif user_type == 2:
-            Lister.objects.create(user=user, classification='owner')
+            Lister.objects.create(user=user, phone=phone,
+                                  classification='owner')
         elif user_type == 3:
-            Lister.objects.create(user=user, classification='agent')
+            Lister.objects.create(user=user, phone=phone,
+                                  classification='agent')
             # send_renter_verification_mail()
         # Assign the custom field to the user instance since it is a model serializer
         user.user_type = user_type
+        user.phone = phone
         return user  # Return the instance, just like the original create() method
 
 
@@ -57,6 +62,8 @@ class RealtorBusinessDoucmentSerializer(serializers.ModelSerializer):
 class PropertySerializer(serializers.ModelSerializer):
 
     propertyimages = serializers.SerializerMethodField(required=False)
+    property_types = serializers.StringRelatedField()
+    lister_phone = serializers.SerializerMethodField(required=False)
 
     def get_propertyimages(self, obj):
         request = self.context.get('request')
@@ -67,9 +74,12 @@ class PropertySerializer(serializers.ModelSerializer):
         imgs = ['http://' + server_url + i.upload.url for i in images]
         return imgs
 
+    def get_lister_phone(self, obj):
+        return obj.lister.phone if obj.lister.phone else 'Missing'
+
     class Meta:
         model = Property
-        fields = ['pk', 'name', 'location_text', 'price', 'currency',
+        fields = ['pk', 'name', 'location_text', 'price', 'currency', 'for_rent', 'lister_phone', 'min_rent_duration', 'max_rent_duration',
                   'description', 'Location', 'property_types', 'propertyimages']
 
 

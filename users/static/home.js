@@ -24,6 +24,15 @@ const toastHTML = `<!-- Toast container -->
   </div>
 </div>`;
 
+function convertMonths(month) {
+  const years = Math.floor(month / 12); // whole years
+  const rem_months = Math.floor(12 * (month / 12 - years));
+
+  return `${years} ${years === 1 ? "year" : "years"} ${
+    rem_months ? rem_months + (rem_months == 1 ? " month" : " months") : ""
+  }`;
+}
+
 function generateUsername(email) {
   // Extract the part of the email before the "@" symbol
   const username = email.split("@")[0];
@@ -73,7 +82,7 @@ function payWithPaystack(e) {
   e.preventDefault();
 
   let handler = PaystackPop.setup({
-    key: "pk_test_8eb3d442920820284fea0d6fcc245ebab8dfbf1b", // Replace with your public key
+    key: "pk_test_6615d077735a133f04df732405a5adfb6d85850e", // Replace with your public key
     email: document.getElementById("email-address").value,
     amount: document.getElementById("amount").value * 100,
     currency: "GHS",
@@ -116,17 +125,34 @@ $(document).ready(function () {
       const title = $("<h2>").text(result.name);
 
       // Create a paragraph for location, price, and type
-      const infoParagraph = $("<p>").text(
-        `Location: ${result.location_text}, Price: ${result.currency}${result.price}, Type: ${result.property_types}`
+      const infoParagraph = $("<p>").html(
+        `Location: ${result.location_text ?? "Missing"}, ${
+          result?.for_rent ? "Monthly Price:" : "Price:"
+        } ${result.currency}${result.price} <br> Type: ${
+          result.property_types
+        }, Phone Number: ${result?.["lister_phone"]} <br> ${
+          result?.for_rent
+            ? `Minimum Allowed Rent Duration: ${convertMonths(
+                result?.min_rent_duration
+              )}`
+            : ""
+        } <br> ${
+          result?.for_rent
+            ? `Maximum Allowed Rent Duration: ${convertMonths(
+                result?.max_rent_duration
+              )}`
+            : ""
+        }`
       );
 
       // Create buttons div
       const buttonsDiv = $("<div>").addClass("buttons");
 
-      // Create "Buy/Rent" button
-      const buyRentButton = $("<button>")
-        .addClass("buy-rent-button")
-        .text("Buy/Rent");
+      // Create "Buy or Rent" button
+      // Text is Buy if for_rent is false, else text is Rent
+      const buyRentButton = result?.for_rent
+        ? $("<button>").addClass("buy-rent-button").text("Rent")
+        : $("<button>").addClass("buy-rent-button").text("Buy");
 
       // Create "View More" button
       const viewMoreButton = $("<button>")
@@ -219,11 +245,13 @@ $(document).ready(function () {
       if (checkboxChecked) {
         $("#inputfirstname").prop("disabled", false);
         $("#inputlastname").prop("disabled", false);
+        $("#inputphonenumber").prop("disabled", false);
         $("#sign_up").prop("disabled", false);
         $("#sign_in").prop("disabled", true);
       } else {
         $("#inputfirstname").prop("disabled", true);
         $("#inputlastname").prop("disabled", true);
+        $("#inputphonenumber").prop("disabled", true);
         $("#sign_up").prop("disabled", true);
         $("#sign_in").prop("disabled", false);
       }
@@ -351,6 +379,7 @@ $(document).ready(function () {
           const email = document.querySelector("#exampleInputEmail1");
           const firstName = document.querySelector("#inputfirstname");
           const lastName = document.querySelector("#inputlastname");
+          const phoneNumber = document.querySelector("#inputphonenumber");
           const username = generateUsername(email.value);
           const password = document.querySelector("#exampleInputPassword1");
 
@@ -368,6 +397,7 @@ $(document).ready(function () {
               email: email.value,
               first_name: firstName.value,
               last_name: lastName.value,
+              phone: phoneNumber.value,
               username: username,
               password: password.value,
               user_type: userType.value,
@@ -378,6 +408,7 @@ $(document).ready(function () {
               form.reset(); //reset form
               firstName.setAttribute("disabled", true);
               lastName.setAttribute("disabled", true);
+              phoneNumber.setAttribute("disabled", true);
               $("#sign_in").prop("disabled", false);
               $("#sign_up").prop("disabled", true);
             } else {
@@ -412,7 +443,25 @@ $(document).ready(function () {
           pictures.innerHTML = "";
 
           property_title.innerHTML = data.name;
-          main_details.innerHTML = `Location: ${data.location_text}, Price: ${data.currency} ${data.price}, Type: ${data.property_types}`;
+          main_details.innerHTML = `Location: ${
+            data.location_text ?? "Missing"
+          }, ${data?.for_rent ? "Monthly Price:" : "Price:"} ${data.currency} ${
+            data.price
+          } <br> Type: ${data.property_types}, Phone Number: ${
+            data?.["lister_phone"]
+          } <br> ${
+            data?.for_rent
+              ? `Minimum Allowed Rent Duration: ${convertMonths(
+                  data?.min_rent_duration
+                )}`
+              : ""
+          } <br> ${
+            data?.for_rent
+              ? `Maximum Allowed Rent Duration: ${convertMonths(
+                  data?.max_rent_duration
+                )}`
+              : ""
+          }`;
           other_details.innerHTML = ` Description : ${data.description}`;
 
           data.propertyimages.forEach((propertyimage) => {

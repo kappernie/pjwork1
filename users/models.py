@@ -21,6 +21,7 @@ from django.contrib.auth.models import User
 class Lister(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     onboarding_completed = models.BooleanField(default=False)
+    phone = models.CharField(max_length=1000, null=True, blank=True)
     Bank_details = models.TextField(null=True, blank=True)
     business_document = models.FilePathField(
         path='media/uploads/documents',  null=True, blank=True)
@@ -36,6 +37,7 @@ class Lister(models.Model):
 class Renter(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     verified = models.BooleanField(default=False)
+    phone = models.CharField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
         return self.user.username

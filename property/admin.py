@@ -11,7 +11,7 @@ class LocationAdmin(admin.ModelAdmin):
 @admin.register(models.Property)
 class PropertyAdmin(admin.ModelAdmin):
     list_display = ['name', 'lister', 'property_types', 'currency',
-                    'price', 'location_text', 'location_modified', 'is_published']
+                    'price', 'location_text', 'location_modified', 'is_published', 'for_rent', 'min_rent_duration', 'max_rent_duration']
 
     @admin.display(description='Location')
     def location_modified(self, obj):

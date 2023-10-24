@@ -10,12 +10,12 @@ from . import models
 
 @admin.register(models.Lister)
 class ListerAdmin(admin.ModelAdmin):
-    list_display = ['user', 'onboarding_completed', 'classification']
+    list_display = ['user', 'phone', 'onboarding_completed', 'classification']
 
 
 @admin.register(models.Renter)
 class RenterAdmin(admin.ModelAdmin):
-    list_display = ['user', 'verified']
+    list_display = ['user', 'phone', 'verified']
 
 
 _models = apps.get_app_config('users').get_models()

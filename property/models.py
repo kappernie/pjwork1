@@ -19,7 +19,7 @@ class PropertyType(models.Model):
                 return choice[1]
 
     def __str__(self):
-        return f"{self.type}"
+        return f"{self.get_type_display()}"
 
 
 class Location (models.Model):
@@ -45,6 +45,11 @@ class Property(models.Model):
         PropertyType, on_delete=models.CASCADE,  null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     lister = models.ForeignKey(Lister, null=True, on_delete=models.CASCADE)
+    for_rent = models.BooleanField(default=False)
+    # This is the duration in months. 12, 24, 36 etc.
+    min_rent_duration = models.IntegerField(blank=True, null=True, default=12)
+    max_rent_duration = models.IntegerField(blank=True, null=True, default=36)
+
     currency = models.CharField(
         max_length=200, choices=CURRENCY_CHOICES, null=True)
     description = models.TextField(max_length=10000, null=True, blank=True)
@@ -56,6 +61,15 @@ class Property(models.Model):
 
     class Meta:
         verbose_name_plural = 'properties'
+        constraints = [
+            models.CheckConstraint(
+                check=(models.Q(for_rent=True) & models.Q(
+                    min_rent_duration__isnull=False) & models.Q(
+                    max_rent_duration__isnull=False)) | (models.Q(for_rent=False) & models.Q(min_rent_duration__isnull=True) & models.Q(
+                        max_rent_duration__isnull=True)),
+                name='rent_duration_required_if_for_rent'
+            )
+        ]
 
 
 class PropertyImage(models.Model):

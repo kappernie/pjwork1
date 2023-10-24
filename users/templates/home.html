@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RealestMarket - HomePage</title>
+    <title>ReMarket - HomePage</title>
     <link rel="stylesheet" href="{% static 'home.css' %}" />
     <!-- Add Bootstrap CSS -->
     <link
@@ -37,15 +37,11 @@
     </header>
     <div class="slider-container">
       <div class="slider">
-        <img
-          src="https://images.unsplash.com/photo-1582407947304-fd86f028f716?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2196&q=80"
-          alt="Image 1"
-        />
         <!-- <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Image 2"> -->
         <!-- <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Image 3"> -->
       </div>
       <div class="slider-text">
-        <h1>Welcome to the RealestMarket</h1>
+        <h1>Welcome to the ReMarket</h1>
       </div>
       <div class="search-container">
         <!-- <div class="slider-text">
@@ -374,7 +370,7 @@
                 </label>
               </div>
               <div class="mb-3">
-                <label for="InputFirstName" class="form-label"
+                <label for="inputfirstname" class="form-label"
                   >First Name</label
                 >
                 <input
@@ -387,11 +383,23 @@
               </div>
 
               <div class="mb-3">
-                <label for="InputLastName" class="form-label">Last Name</label>
+                <label for="inputlastname" class="form-label">Last Name</label>
                 <input
                   class="form-control"
                   id="inputlastname"
                   aria-describedby="emailHelp"
+                  disabled
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="inputphonenumber" class="form-label">Phone</label>
+                <input
+                  type="text"
+                  pattern="^(0|\+233)\d{9}$"
+                  class="form-control"
+                  id="inputphonenumber"
+                  placeholder="+233201234567 or 0201234567"
                   disabled
                   required
                 />
