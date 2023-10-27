@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from decimal import Decimal
 
 # Create your views here.
 from rest_framework import generics
@@ -14,6 +15,7 @@ from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.views import PasswordResetView
 from django.utils.decorators import method_decorator
+from django.db.models import F, DecimalField, ExpressionWrapper, Case, When
 from rest_framework import viewsets
 from .serializers import RealtorBankDetailsSerializer, RealtorBusinessDoucmentSerializer, PropertySerializer, MultiplePropertyImageUploadSerializer,\
     TransactionsSerializer
@@ -97,7 +99,7 @@ def user_login(request):
         token, created = Token.objects.get_or_create(user=user)
         # Return authentication token in the response
         resp['token'] = token.key
-        login(request, user)  # update last login
+        # login(request, user)  # update last login
         return Response(resp)
     else:
         return Response({'error': 'Invalid credentials'}, status=400)
@@ -105,12 +107,12 @@ def user_login(request):
 
 @csrf_exempt
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def user_logout(request):
     status = flush_user_token(request)
     if status:
-        logout(request)
-        return Response({'success': 'True', 'msg': 'you have been successfully logged out '})
+        # logout(request)
+        return Response({'success': 'True', 'msg': 'You have been logged out '})
     return Response({'error': 'something went wrong , please try again '}, status=400)
 
 
@@ -194,11 +196,32 @@ class RealtorBusinessDocumentViewSet(viewsets.ModelViewSet):
 # crud for realtor to create , list and update listing
 # authorized by admin on creation , update  and deletion only approved by admin
 class PropertyListingViewSet(viewsets.ModelViewSet):
-    queryset = Property.objects.all()
     serializer_class = PropertySerializer
     parser_classes = (MultiPartParser, FormParser)
+    queryset = Property.objects.annotate(
+        down_payment_amt=ExpressionWrapper(
+            Case(
+                When(for_rent=True, then=F('price') * 6),
+                When(for_rent=False, then=F('price') * 0.3),
+                output_field=DecimalField(max_digits=10, decimal_places=2)
+            ),
+            output_field=DecimalField(max_digits=10, decimal_places=2)
+        )
+    )
+
+    def retrieve(self, request, *args, **kwargs):
+        duration_4_rent = request.query_params.get('duration', None)
+        if duration_4_rent:
+            property_obj = self.get_object()
+            print(property_obj.price)
+            onetime_payment_amt_4_rent = property_obj.price * \
+                int(duration_4_rent)
+            return Response({"amount": Decimal(onetime_payment_amt_4_rent).quantize(Decimal('0.00'))})
+        else:
+            return super().retrieve(request, *args, **kwargs)
 
     # get the list of properties created and published by realtor
+
     def list(self, request, pk):
         msg = getAuthUserId(request)
         if not msg['error']:

@@ -46,7 +46,8 @@ def getAuthUserId(request):
 
 def flush_user_token(request):
     # Get the authentication token from the headers
-    auth_token = request.META.get('HTTP_AUTHORIZATION', '')
+    auth_token = request.META.get('HTTP_AUTHORIZATION', '').split()[1]
+    # print(auth_token)
     msg = {'error': True}
     try:
         # Get the Token object associated with the provided token

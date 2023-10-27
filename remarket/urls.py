@@ -22,6 +22,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from users.views import user_login, UserRegisterView, custom_password_reset_view, user_logout
+from payments import urls
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
@@ -31,6 +32,8 @@ router = DefaultRouter()
 router.register(r'realtor-bank-details', RealtorBankDetailsViewSet)
 router.register(r'listing', PropertyListingViewSet)
 router.register(r'transactions', ViewSettlementTransactionDataViewSet)
+
+# print(router.urls)
 
 admin.site.site_header = 'ReMarket Admin Dashboard'
 admin.site.site_title = 'The gateway to the ReMarket Backend'
@@ -69,6 +72,7 @@ urlpatterns = [
 
     # CRUD apis bankdetails
     path('api/', include(router.urls)),
+    path('payments/', include(urls)),
 
     path('options', GetLocationPriceTypeNamesAndIds.as_view(
         {'get': 'list'}), name='options'),

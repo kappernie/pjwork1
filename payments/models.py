@@ -11,6 +11,7 @@ class Payment(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     settled = models.BooleanField(default=False)
+    duration = models.IntegerField(blank=True, null=True)
     settlement_date = models.DateTimeField(blank=True, null=True)
     currency = models.TextField(max_length=500, null=True)
     transaction_id = models.TextField(max_length=500, null=True)
@@ -25,11 +26,11 @@ class Payment(models.Model):
 class Plan(models.Model):
     # enums
     # status
-    QUATERLY = 1
+    QUARTERLY = 1
     BIANUALLY = 2
 
     INTERVALS = [
-        (QUATERLY, 'Quarterly'),
+        (QUARTERLY, 'Quarterly'),
         (BIANUALLY, 'Binually'),
     ]
 
@@ -38,6 +39,10 @@ class Plan(models.Model):
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     down_payment_amt = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
+    total_amount_at_the_end_of_sub = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True)
+    onetime_payment_amt = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     interval = models.SmallIntegerField(choices=INTERVALS)
@@ -51,21 +56,25 @@ class PaymentSubscription(models.Model):
 
     # enums
     # status
-    PROCESSING = 1
-    ACTIVE = 2
-    SETTLED = 3
+    ACTIVE = 1
+    NON_RENEWING = 2
+    ATTENTION = 3
+    COMPLETED = 4
+    CANCELLED = 5
 
     STATUSES = [
-        (PROCESSING, 'Processing'),
         (ACTIVE, 'Active'),
-        (SETTLED, 'Settled'),
+        (NON_RENEWING, 'Non renewing'),
+        (ATTENTION, 'Attention'),
+        (COMPLETED, 'Completed'),
+        (CANCELLED, 'Cancelled'),
     ]
 
     down_payment = models.OneToOneField(
         Payment, on_delete=models.PROTECT)
     customer = models.ForeignKey(Renter, on_delete=models.PROTECT)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    status = models.SmallIntegerField(choices=STATUSES, default=PROCESSING)
+    status = models.SmallIntegerField(choices=STATUSES, default=ACTIVE)
     subscription_code = models.CharField(max_length=512, null=True, blank=True)
     email_token = models.CharField(max_length=512, null=True, blank=True)
     start_date = models.DateTimeField(blank=True, null=True)

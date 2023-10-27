@@ -46,11 +46,7 @@ INSTALLED_APPS = [
 
     "rest_framework.authtoken",
     'django_extensions',
-
     'corsheaders',
-
-
-
 ]
 
 MIDDLEWARE = [
@@ -127,8 +123,9 @@ AUTH_PASSWORD_VALIDATORS = [
 REST_FRAMEWORK = {
     # ...
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
+    'COERCE_DECIMAL_TO_STRING': False,
 }
 
 

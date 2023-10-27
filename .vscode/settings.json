@@ -1,0 +1,11 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "pjwork",
+      "database": "${workspaceFolder:pjwork1}/db.sqlite3"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
+}
