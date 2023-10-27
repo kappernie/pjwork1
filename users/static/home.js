@@ -293,7 +293,7 @@ function buyOrRentEventHanlder(event, buyRentButton) {
           ).format(apiResponse?.down_payment_amt)}</div>
           ${
             apiResponse?.for_rent
-              ? `<small>This amount is down payment for the first 6 months. The remaining installments will be calculated based on the billing interval you choose. The scheduled payment plan will be emailed to you. Billing is automatic.</small>
+              ? `<small>This amount is down payment for the first 6 months. The remaining amount will paid over a period of time based on the billing interval you choose. The scheduled payment plan will be emailed to you. Billing is automatic.</small>
                 <div class="row mt-3 mb-3">
                   <label for="billingInterval" class="col-3 col-form-label">Billing Interval:</label>
                   <div class="col">
@@ -307,7 +307,19 @@ function buyOrRentEventHanlder(event, buyRentButton) {
                 
                 <button type="submit" style="width:100%;" class="btn btn-primary">Pay</button>
                 `
-              : `<small>This amount is 30% of the total price as down payment for the property. The remaining installments will be paid monthly over the course of a year (12 months). The scheduled payment plan will be emailed to you. Billing is automatic.</small>
+              : `<small>This amount is 30% of the total price as down payment for the property. The remaining amount will be monthly installments paid over the course of the 
+              mortgage duration you choose. The scheduled payment plan will be emailed to you. Billing is automatic.</small>
+              <div class="row mt-3 mb-3">
+                  <label for="mortgageDuration" class="col-3 col-form-label">Mortgage Duration:</label>
+                  <div class="col">
+                    <select class="form-select" id="mortgageDuration" name="mortgageDuration" required>
+                      <option value="" selected disabled>Choose your preferred mortgage repayment duration</option>
+                      <option value="12">1 year</option>
+                      <option value="36">3 years</option>
+                      <option value="60">5 years</option>
+                    </select>
+                  </div>
+                </div>
               <button type="submit" style="width:100%;" class="btn btn-primary mt-3">Pay</button>
               `
           }
@@ -377,6 +389,7 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
   const emailAddress = document.querySelector("#email-address");
   const duration = document.querySelector("#duration");
   const billingInterval = document.querySelector("#billingInterval");
+  const mortgageDuration = document.querySelector("#mortgageDuration");
   console.log(apiResponse);
 
   const paymentPlan = formData.get("payment-plan");
@@ -519,6 +532,7 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
                 emailAddress: emailAddress.value,
                 firstName: firstName.value,
                 lastName: lastName.value,
+                mortgageDuration: mortgageDuration.value,
                 amount: apiResponse?.down_payment_amt,
               },
               {
