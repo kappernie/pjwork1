@@ -26,7 +26,8 @@ from payments import urls
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from users.views import RealtorBankDetailsViewSet, GetLocationPriceTypeNamesAndIds, PropertyListingViewSet, ViewSettlementTransactionDataViewSet, property_search_sort_filter, landing_page
+from users.views import RealtorBankDetailsViewSet, GetLocationPriceTypeNamesAndIds, PropertyListingViewSet, ViewSettlementTransactionDataViewSet, property_search_sort_filter, landing_page, onboarding_view, PropertyListView, PropertyCreateView, PropertyUpdateView, PropertyDeleteView, PropertyDetailView
+
 
 router = DefaultRouter()
 router.register(r'realtor-bank-details', RealtorBankDetailsViewSet)
@@ -69,6 +70,19 @@ urlpatterns = [
     path('logout', user_logout, name='user_logut'),
     path('register', UserRegisterView.as_view(), name='register'),
     path('reset-password/', custom_password_reset_view, name='reset-password'),
+    path('onboarding/', onboarding_view, name='onboarding'),
+    path('listers/<int:pk>/properties',
+         PropertyListView.as_view(), name='property-list'),
+    path('listers/<int:pk>/properties/create',
+         PropertyCreateView.as_view(), name='property-create'),
+    path('listers/<int:pk>/properties/<int:property_pk>',
+         PropertyDetailView.as_view(), name='listing-detail'),
+    path('listers/<int:pk>/properties/<int:property_pk>/edit',
+         PropertyUpdateView.as_view(), name='property-update'),
+    path('listers/<int:pk>/properties/<int:property_pk>/delete',
+         PropertyDeleteView.as_view(), name='property-delete'),
+
+
 
     # CRUD apis bankdetails
     path('api/', include(router.urls)),

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+      <h2>{{ object.name }}</h2>
+      <!-- Display other fields here -->
+      
+      <h3>Images</h3>
+      {% for image in object.images.all %}
+        <img src="{{ image.image.url }}" alt="Property Image">
+      {% empty %}
+        <p>No images yet.</p>
+      {% endfor %}
+      <!-- Edit and Delete buttons -->
+      <div class="text-center mt-3">
+        <a href="{% url 'property-update' pk=object.lister.pk property_pk=object.pk %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'property-delete' pk=object.lister.pk property_pk=object.pk %}" class="btn btn-danger">Delete</a>
+        <div class="mt-1">
+            <a href="{% url "property-list" pk=object.lister.pk %}">Back to properties</a>
+        </div>
+      </div>
+  </div>
+{% endblock %}

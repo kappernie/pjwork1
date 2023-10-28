@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .p-5 {
+        padding: 4rem !important;
+      }
+      
+</style>
+  <div class="container p-5 mt-5">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ images.management_form }}
+        <h4 class="mb-1">Add image(s)</h4>
+        <div class="small mb-4">You are allowed to add a maximum of 6 images</div>
+        <div id="formset-container">
+            {% for image_form in images %}
+            <div class="image-form mb-3 input-group d-flex flex-nowrap gap-4 align-items-center">
+                <div class="d-flex">
+                    <label class="input-group-text" for={{ image_form.upload.auto_id }}>Upload a property image</label>
+                    {{ image_form.upload }}
+                </div>
+                <button type="button" class="btn-close remove-form-button" aria-label="Remove"></button>
+              </div>
+            {% endfor %}
+          </div>
+          
+          <div class="text-end pe-3">
+            <p style="cursor: pointer;" id="add-form-button"  class="text-decoration-underline text-primary">Add more images</p>
+        </div>
+            <!-- Hidden input for the lister's ID -->
+            <input type="hidden" name="lister_id" value="{{ lister_pk }}">
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+
+      </form>
+  </div>
+  <script>
+    // Define a function to toggle the visibility of the rent duration fields
+    function toggleRentDuration() {
+      // Get the value of the for_rent field
+      var forRent = $('#for_rent').is(':checked');
+      // console.log(forRent)
+      // If it is true, show the rent duration fields
+      if (forRent) {
+          $('#min_rent_duration').show();
+          $('#min_rent_duration').prop('disabled', false);
+        $('label[for="min_rent_duration"]').show();
+        $('#max_rent_duration').show();
+        $('#max_rent_duration').prop('disabled', false);
+        $('label[for="max_rent_duration"]').show();
+        // Otherwise, hide them
+    } else {
+        $('#min_rent_duration').hide();
+        $('#min_rent_duration').prop('disabled', true);
+        $('label[for="min_rent_duration"]').hide();
+        $('#max_rent_duration').hide();
+        $('#max_rent_duration').prop('disabled', true);
+        $('label[for="max_rent_duration"]').hide();
+      }
+    }
+  
+    // Call the function when the page loads
+    $(document).ready(function() {
+      toggleRentDuration();
+      var formsetContainer = $('#formset-container');
+      var addFormButton = $('#add-form-button');
+      var totalFormsInput = $('#id_images-TOTAL_FORMS');
+
+        // Update the total forms input value
+        function updateTotalForms() {
+            var totalForms = formsetContainer.children().length;
+            totalFormsInput.val(totalForms);
+        }
+
+        // Add form button click handler
+        addFormButton.click(function() {
+            // Get the last image form
+            var lastImageForm = formsetContainer.children().last();
+
+            // Clone it and append it to the formset container
+            var newImageForm = lastImageForm.clone();
+            formsetContainer.append(newImageForm);
+
+            // Generate a unique ID for the new form
+            var uniqueId = 'id_propertyimage_set-' + (formsetContainer.children().length - 1) + '-upload';
+            var uniqueIdName = 'propertyimage_set-' + (formsetContainer.children().length - 1) + '-upload';
+
+            // Update the ID and name of the file input in the new form
+            newImageForm.find('input[type="file"]').attr('id', uniqueId).attr('name', uniqueIdName);
+
+            // Clear the file input value in the new form
+            newImageForm.find('input[type="file"]').val('');
+
+            // Update the 'for' attribute of the label in the new form
+            newImageForm.find('label').attr('for', uniqueId);
+
+            // Update the total forms input value
+            updateTotalForms();
+
+            // Hide the add form button if we've reached the max number of forms
+            if (formsetContainer.children().length >= {{ images.max_num }}) {
+                addFormButton.hide();
+            }
+        });
+
+
+       // Remove form button click handler
+        formsetContainer.on('click', '.remove-form-button', function() {
+            // Only remove the form if there is more than one
+            if (formsetContainer.children().length > 1) {
+                // Remove the parent image form
+                $(this).parent().remove();
+
+                // Update the total forms input value
+                updateTotalForms();
+
+                // Update the ID and name attributes of the remaining forms
+                formsetContainer.children().each(function(index, element) {
+                    var uniqueId = 'id_propertyimage_set-' + index + '-upload';
+                    var uniqueIdName = 'propertyimage_set-' + index + '-upload';
+                    $(element).find('input[type="file"]').attr('id', uniqueId).attr('name', uniqueIdName);
+                    $(element).find('label').attr('for', uniqueId);
+                });
+
+                // Show the add form button if we're under the max number of forms
+                if (formsetContainer.children().length < {{ images.max_num }}) {
+                    addFormButton.show();
+                }
+            }
+        });
+
+            });
+  
+    // Call the function when the for_rent field changes
+    $('#for_rent').change(function() {
+      toggleRentDuration();
+    });
+  </script>
+{% endblock %}

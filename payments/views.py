@@ -1,7 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from django.conf import settings
 # Create your views here.
+
+print(settings.PROPERTY_RECURRING_PAYMENT_PERCENTAGE)
 
 
 class OneTimePayment(APIView):

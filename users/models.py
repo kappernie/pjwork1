@@ -23,8 +23,8 @@ class Lister(models.Model):
     onboarding_completed = models.BooleanField(default=False)
     phone = models.CharField(max_length=1000, null=True, blank=True)
     Bank_details = models.TextField(null=True, blank=True)
-    business_document = models.FilePathField(
-        path='media/uploads/documents',  null=True, blank=True)
+    business_document = models.FileField(
+        upload_to='uploads/documents',  null=True, blank=True)
     classification = models.CharField(max_length=1000, null=True, choices=[
         ('owner', 'Owner'),
         ('agent', 'Agent'),

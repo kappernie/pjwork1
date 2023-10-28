@@ -64,6 +64,7 @@ class PropertySerializer(serializers.ModelSerializer):
     propertyimages = serializers.SerializerMethodField(required=False)
     property_types = serializers.StringRelatedField()
     lister_phone = serializers.SerializerMethodField(required=False)
+    lister_id = serializers.SerializerMethodField(required=False)
     down_payment_amt = serializers.DecimalField(
         max_digits=10, decimal_places=2, read_only=True)
 
@@ -79,9 +80,12 @@ class PropertySerializer(serializers.ModelSerializer):
     def get_lister_phone(self, obj):
         return obj.lister.phone if obj.lister.phone else 'Missing'
 
+    def get_lister_id(self, obj):
+        return obj.lister.pk if obj.lister.pk else 'Missing'
+
     class Meta:
         model = Property
-        fields = ['pk', 'name', 'location_text', 'price', 'down_payment_amt', 'currency', 'for_rent', 'lister_phone', 'min_rent_duration', 'max_rent_duration',
+        fields = ['pk', 'name', 'location_text', 'price', 'down_payment_amt', 'currency', 'for_rent', 'lister_phone', 'lister_id', 'min_rent_duration', 'max_rent_duration',
                   'description', 'Location', 'property_types', 'propertyimages']
 
 

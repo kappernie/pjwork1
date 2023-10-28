@@ -1,54 +1,20 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ReMarket - HomePage</title>
-    <link rel="stylesheet" href="{% static 'home.css' %}" />
-    <!-- Add Bootstrap CSS -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
-    />
-    <!-- Add Bootstrap icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
-    />
-    <!-- Add jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  </head>
-  <body>
-    <!-- Header Bar -->
-    <header class="header">
-      <nav class="header-menu">
-        <ul class="header-nav">
-          <!-- <li>
-            <a href="/admin" target="_blank" class="realtor-redirect"
-              >Realtor log in</a
-            > -->
-          <!-- </li> -->
-          <li>
-            <a href="#" class="renter-sign-in-button">Login or Sign up</a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <div class="slider-container">
-      <div class="slider">
-        <!-- <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Image 2"> -->
-        <!-- <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Image 3"> -->
-      </div>
-      <div class="slider-text">
-        <h1>Welcome to the ReMarket</h1>
-      </div>
-      <div class="search-container">
-        <!-- <div class="slider-text">
+{% extends "base.html" %} 
+
+{% block content %}
+<div class="slider-container">
+  <div class="slider">
+    <!-- <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Image 2"> -->
+    <!-- <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Image 3"> -->
+  </div>
+  <div class="slider-text">
+    <h1>Welcome to the ReMarket</h1>
+  </div>
+  <div class="search-container">
+    <!-- <div class="slider-text">
       </div> -->
-        <input type="text" class="search-field" placeholder="Enter a keyword" />
-        <div class="dropdowns">
-          <!-- <select class="location-dropdown">
+    <input type="text" class="search-field" placeholder="Enter a keyword" />
+    <div class="dropdowns">
+      <!-- <select class="location-dropdown">
             <option value="" disabled selected>location</option>
             <option value="1">Madina</option>
             <option value="2">Tema</option>
@@ -68,11 +34,11 @@
             <option value="4S">For Sale</option>
             <option value="4R">For Rent</option>
           </select> -->
-          <button style="width: 50%" class="search-button">Search</button>
-        </div>
-      </div>
-      <div class="result-cards-container" id="cards-section">
-        <!-- <div class="result-card" >
+      <button style="width: 50%" class="search-button">Search</button>
+    </div>
+  </div>
+  <div class="result-cards-container" id="cards-section">
+    <!-- <div class="result-card" >
             <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Result Image">
             <div class="result-info">
               <h2>Property Title</h2>
@@ -107,7 +73,7 @@
               </div>
             </div>
           </div> -->
-        <!-- 
+    <!-- 
           <div class="result-card" >
             <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Result Image">
             <div class="result-info">
@@ -119,7 +85,7 @@
               </div>
             </div>
           </div> -->
-        <!-- <div class="sorting-card">
+    <!-- <div class="sorting-card">
             <label for="sort-select">Sort by:</label>
             <select id="sort-select">
               <option value="price">Price</option>
@@ -127,394 +93,351 @@
               <option value="type">Type</option>
             </select>
           </div> -->
+  </div>
+  <!-- Sorting Card -->
+</div>
+
+<!-- Buy/Rent Modal -->
+<div
+  class="modal fade"
+  id="buyRentModal"
+  tabindex="-1"
+  aria-labelledby="buyRentModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="buyRentModalLabel">Buy/Rent Property</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
-      <!-- Sorting Card -->
-    </div>
-
-    <!-- Buy/Rent Modal -->
-    <div
-      class="modal fade"
-      id="buyRentModal"
-      tabindex="-1"
-      aria-labelledby="buyRentModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="buyRentModalLabel">
-              Buy/Rent Property
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+      <div class="modal-body">
+        <form method="post" id="paymentForm">
+          <div class="row mb-2">
+            <div class="form-group col">
+              <label for="first-name">First Name</label>
+              <input
+                readonly
+                class="form-control"
+                type="text"
+                id="first-name"
+                name="first-name"
+              />
+            </div>
+            <div class="form-group col">
+              <label for="last-name">Last Name</label>
+              <input
+                readonly
+                class="form-control"
+                type="text"
+                id="last-name"
+                name="last-name"
+              />
+            </div>
           </div>
-          <div class="modal-body">
-            <form method="post" id="paymentForm">
-              <div class="row mb-2">
-                <div class="form-group col">
-                  <label for="first-name">First Name</label>
-                  <input
-                    readonly
-                    class="form-control"
-                    type="text"
-                    id="first-name"
-                    name="first-name"
-                  />
-                </div>
-                <div class="form-group col">
-                  <label for="last-name">Last Name</label>
-                  <input
-                    readonly
-                    class="form-control"
-                    type="text"
-                    id="last-name"
-                    name="last-name"
-                  />
-                </div>
-              </div>
-              <div id="email-address-container" class="form-group mb-2">
-                <label for="email">Email Address</label>
-                <input
-                  readonly
-                  class="form-control"
-                  type="email"
-                  id="email-address"
-                  name="email-address"
-                  required
-                />
-              </div>
+          <div id="email-address-container" class="form-group mb-2">
+            <label for="email">Email Address</label>
+            <input
+              readonly
+              class="form-control"
+              type="email"
+              id="email-address"
+              name="email-address"
+              required
+            />
+          </div>
 
-              <!-- <div class="form-submit">
+          <!-- <div class="form-submit">
                 <button type="submit" onclick="payWithPaystack()">Pay</button>
               </div> -->
-            </form>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- View More Modal -->
-    <div
-      class="modal fade"
-      id="viewMoreModal"
-      tabindex="-1"
-      aria-labelledby="viewMoreModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="viewMoreModalLabel">Detailed View</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div
-              id="carouselExample"
-              class="carousel slide"
-              data-bs-ride="carousel"
-            >
-              <div class="carousel-inner" id="carousel-inner"></div>
-              <button
-                class="carousel-control-prev"
-                type="button"
-                data-bs-target="#carouselExample"
-                data-bs-slide="prev"
-              >
-                <span
-                  class="carousel-control-prev-icon"
-                  aria-hidden="true"
-                ></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button
-                class="carousel-control-next"
-                type="button"
-                data-bs-target="#carouselExample"
-                data-bs-slide="next"
-              >
-                <span
-                  class="carousel-control-next-icon"
-                  aria-hidden="true"
-                ></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-            <h2 id="title">Property Title</h2>
-            <p id="main_details">
-              Location: XYZ, Price: $1,000,000, Type: House
-            </p>
-            <p id="other_details">
-              Detailed Description of the property goes here.
-            </p>
-          </div>
-        </div>
+<!-- View More Modal -->
+<div
+  class="modal fade"
+  id="viewMoreModal"
+  tabindex="-1"
+  aria-labelledby="viewMoreModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewMoreModalLabel">Detailed View</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
-    </div>
-
-    <!-- sign in modal for renter -->
-    <div
-      class="modal fade"
-      id="signInModal"
-      tabindex="-1"
-      aria-labelledby="signInModaLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg">
-        <!-- Toast container -->
+      <div class="modal-body">
         <div
-          class="position-absolute p-3 start-50 translate-middle"
-          style="z-index: 9999; top: 20px"
-          data-bs-delay="10000"
+          id="carouselExample"
+          class="carousel slide"
+          data-bs-ride="carousel"
         >
-          <div
-            id="myToast"
-            class="toast hide"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
+          <div class="carousel-inner" id="carousel-inner"></div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExample"
+            data-bs-slide="prev"
           >
-            <div class="toast-header">
-              <div style="flex-grow: 1"></div>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="toast"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="toast-body"></div>
-          </div>
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExample"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
         </div>
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="viewMoreModalLabel">
-              Log in/Sign up on RealestMarket
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form class="authform">
-              <!-- Renter/Owner/Agent -->
-              <div class="text-muted mb-1">
-                Please choose one of the roles below.
-              </div>
-
-              <div class="mb-2">
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="userType"
-                    id="renterRadio"
-                    value="1"
-                    required
-                  />
-                  <label class="form-check-label" for="renterRadio">
-                    Renter
-                  </label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="userType"
-                    id="ownerRadio"
-                    value="2"
-                    required
-                  />
-                  <label class="form-check-label" for="ownerRadio">
-                    Owner
-                  </label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="userType"
-                    id="agentRadio"
-                    value="3"
-                    required
-                  />
-                  <label class="form-check-label" for="agentRadio">
-                    Agent
-                  </label>
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email</label>
-                <input
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  aria-describedby="emailHelp"
-                  type="email"
-                  required
-                />
-                <!-- <div id="emailHelp" class="form-text">Please provide details below to sign up / sign in .</div> -->
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label"
-                  >Password</label
-                >
-                <input
-                  type="password"
-                  class="form-control"
-                  id="exampleInputPassword1"
-                  required
-                />
-              </div>
-              <div class="mb-3 form-check">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  id="exampleCheck1"
-                />
-                <label class="form-check-label" for="exampleCheck1"
-                  >Check this box to provide the extra information for sign up
-                </label>
-              </div>
-              <div class="mb-3">
-                <label for="inputfirstname" class="form-label"
-                  >First Name</label
-                >
-                <input
-                  class="form-control"
-                  id="inputfirstname"
-                  aria-describedby="emailHelp"
-                  disabled
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="inputlastname" class="form-label">Last Name</label>
-                <input
-                  class="form-control"
-                  id="inputlastname"
-                  aria-describedby="emailHelp"
-                  disabled
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="inputphonenumber" class="form-label">Phone</label>
-                <input
-                  type="text"
-                  pattern="^(0|\+233)\d{9}$"
-                  class="form-control"
-                  id="inputphonenumber"
-                  placeholder="+233201234567 or 0201234567"
-                  disabled
-                  required
-                />
-              </div>
-
-              <button type="submit" class="btn btn-primary" id="sign_in">
-                Sign in
-              </button>
-              <button
-                disabled
-                type="submit"
-                class="btn btn-primary"
-                id="sign_up"
-              >
-                Sign up
-              </button>
-            </form>
-          </div>
-        </div>
+        <h2 id="title">Property Title</h2>
+        <p id="main_details">Location: XYZ, Price: $1,000,000, Type: House</p>
+        <p id="other_details">
+          Detailed Description of the property goes here.
+        </p>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- modal for purchased items -->
+<!-- sign in modal for renter -->
+<div
+  class="modal fade"
+  id="signInModal"
+  tabindex="-1"
+  aria-labelledby="signInModaLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <!-- Toast container -->
     <div
-      class="modal fade"
-      id="purchasedModal"
-      tabindex="-1"
-      aria-labelledby="purchasedModalabel"
-      aria-hidden="true"
+      class="position-absolute p-3 start-50 translate-middle"
+      style="z-index: 9999; top: 20px"
+      data-bs-delay="10000"
     >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="purchasedModalLabel">
-              Listings rented/purchased by you
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Property</th>
-                  <th scope="col">Amount</th>
-                  <th scope="col">Date Purchased</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Accra</td>
-                  <td>$200</td>
-                  <td>20/10/23</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Tema</td>
-                  <td>$300</td>
-                  <td>21/10/23</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Tema</td>
-                  <td>$300</td>
-                  <td>22/10/23</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      <div
+        id="myToast"
+        class="toast hide"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="toast-header">
+          <div style="flex-grow: 1"></div>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
         </div>
+        <div class="toast-body"></div>
       </div>
     </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewMoreModalLabel">
+          Log in/Sign up on RealestMarket
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form class="authform">
+          <!-- Renter/Owner/Agent -->
+          <div class="text-muted mb-1">
+            Please choose one of the roles below.
+          </div>
 
-    <script src="https://js.paystack.co/v2/inline.js"></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"
-      integrity="sha512-emSwuKiMyYedRwflbZB2ghzX8Cw8fmNVgZ6yQNNXXagFzFOaQmbvQ1vmDkddHjm5AITcBIZfC7k4ShQSjgPAmQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/9.0.0/decimal.min.js"
-      integrity="sha512-zPQm8HS4Phjo9pUbbk+HPH3rSWu5H03NFvBpPf6D9EU2xasj0ZxhYAc/lvv/HVDWMSE1Autj19i6nZOfiVQbFQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <!-- Add Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="
-    https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
-    "></script>
-    <script src="{% static 'home.js' %}"></script>
-  </body>
-</html>
+          <div class="mb-2">
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="userType"
+                id="renterRadio"
+                value="1"
+                required
+              />
+              <label class="form-check-label" for="renterRadio"> Renter </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="userType"
+                id="ownerRadio"
+                value="2"
+                required
+              />
+              <label class="form-check-label" for="ownerRadio"> Owner </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="userType"
+                id="agentRadio"
+                value="3"
+                required
+              />
+              <label class="form-check-label" for="agentRadio"> Agent </label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email</label>
+            <input
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              type="email"
+              required
+            />
+            <!-- <div id="emailHelp" class="form-text">Please provide details below to sign up / sign in .</div> -->
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label"
+              >Password</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="exampleInputPassword1"
+              required
+            />
+          </div>
+          <div class="mb-3 form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="exampleCheck1"
+            />
+            <label class="form-check-label" for="exampleCheck1"
+              >Check this box to provide the extra information for sign up
+            </label>
+          </div>
+          <div class="mb-3">
+            <label for="inputfirstname" class="form-label">First Name</label>
+            <input
+              class="form-control"
+              id="inputfirstname"
+              aria-describedby="emailHelp"
+              disabled
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="inputlastname" class="form-label">Last Name</label>
+            <input
+              class="form-control"
+              id="inputlastname"
+              aria-describedby="emailHelp"
+              disabled
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="inputphonenumber" class="form-label">Phone</label>
+            <input
+              type="text"
+              pattern="^(0|\+233)\d{9}$"
+              class="form-control"
+              id="inputphonenumber"
+              placeholder="+233201234567 or 0201234567"
+              disabled
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="sign_in">
+            Sign in
+          </button>
+          <button disabled type="submit" class="btn btn-primary" id="sign_up">
+            Sign up
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal for purchased items -->
+<div
+  class="modal fade"
+  id="purchasedModal"
+  tabindex="-1"
+  aria-labelledby="purchasedModalabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="purchasedModalLabel">
+          Listings rented/purchased by you
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Property</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Date Purchased</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Accra</td>
+              <td>$200</td>
+              <td>20/10/23</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Tema</td>
+              <td>$300</td>
+              <td>21/10/23</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Tema</td>
+              <td>$300</td>
+              <td>22/10/23</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -172,3 +172,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'your-gmail-email@gmail.com'  # Your Gmail email address
 # Your Gmail password or an app-specific password
 EMAIL_HOST_PASSWORD = 'your-gmail-password'
+
+PROPERTY_RECURRING_PAYMENT_PERCENTAGE = 0.05

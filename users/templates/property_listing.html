@@ -1,0 +1,48 @@
+<!-- property_listing.html -->
+{% extends "base.html" %} 
+
+{% block title %}ReMarket - Add a listing{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2>Property Listing</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ image_formset }}
+    {{ form.as_div }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<script>
+  // Define a function to toggle the visibility of the rent duration fields
+  function toggleRentDuration() {
+    // Get the value of the for_rent field
+    var forRent = $('#for_rent').is(':checked');
+    // console.log(forRent)
+    // If it is true, show the rent duration fields
+    if (forRent) {
+      $('#min_rent_duration').show();
+      $('label[for="min_rent_duration"]').show();
+      $('#max_rent_duration').show();
+      $('label[for="max_rent_duration"]').show();
+      // Otherwise, hide them
+    } else {
+      $('#min_rent_duration').hide();
+      $('label[for="min_rent_duration"]').hide();
+      $('#max_rent_duration').hide();
+      $('label[for="max_rent_duration"]').hide();
+    }
+  }
+
+  // Call the function when the page loads
+  $(document).ready(function() {
+    toggleRentDuration();
+  });
+
+  // Call the function when the for_rent field changes
+  $('#for_rent').change(function() {
+    toggleRentDuration();
+  });
+</script>
+{% endblock %}

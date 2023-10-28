@@ -1,4 +1,8 @@
 let payStackEventCreated = false;
+const RENTER = 1;
+const OWNER = 2;
+const AGENT = 3;
+
 const toastHTML = `<!-- Toast container -->
 <div
   class="position-absolute p-3 top-0 start-50 translate-middle"
@@ -592,12 +596,33 @@ $(document).ready(function () {
   });
 
   const header = document.querySelector(".header-nav");
+  const userData = JSON.parse(localStorage.getItem("remarket"));
   if (authenticated) {
     const data = JSON.parse(localStorage.getItem("remarket"));
     header.innerHTML = "";
-    header.innerHTML = `<li class = "profile-name"><a href = "#">Welcome ${data.first_name}<a/></li>`;
-    header.innerHTML +=
-      '<li><a href = "#"> <i class="bi bi-bag " id = "purchased"></i> </li> <li><a href = "#"><i class="bi bi-box-arrow-right" id = "logout" ></i><a/></li>';
+    header.innerHTML = `<li class="profile-name">
+      <a href="http://localhost:1738/">Welcome ${data.first_name}</a>
+    </li>`;
+    header.innerHTML += `
+   ${
+     (userData?.user_type === OWNER || userData?.user_type === AGENT) &&
+     !userData?.onboarded
+       ? `<li>
+       <a href="http://localhost:1738/onboarding/">Onboarding</a>
+     </li>`
+       : `
+          <li>
+            <a href="http://localhost:1738/listers/${userData?.pk}/properties">Listings</a>
+          </li>
+    `
+   }
+   <li>
+      <a href="#"><i class="bi bi-bag" id="purchased"></i></a>
+    </li>
+    <li>
+      <a href="#"><i class="bi bi-box-arrow-right" id="logout"></i></a>
+    </li>
+    `;
 
     const logout = document.querySelector("#logout");
     logout.addEventListener("click", function () {
@@ -710,12 +735,22 @@ $(document).ready(function () {
 
       // Create "Buy or Rent" button
       // Text is Buy if for_rent is false, else text is Rent
-      const buyRentButton = result?.for_rent
-        ? $("<button>").addClass("buy-rent-button").text("Rent")
-        : $("<button>").addClass("buy-rent-button").text("Buy");
+      const buyRentEditButton = (() => {
+        if (
+          (userData?.user_type === OWNER || userData?.user_type === AGENT) &&
+          result?.lister_id === userData?.pk
+        ) {
+          return $("<button>").text("Edit");
+        } else if (userData?.user_type === RENTER) {
+          return result?.for_rent
+            ? $("<button>").addClass("buy-rent-button").text("Rent")
+            : $("<button>").addClass("buy-rent-button").text("Buy");
+        }
+      })();
 
+      // console.dir(buyRentEditButton);
       // Disable buttons if the user is not signed in
-      !authenticated && buyRentButton.attr("disabled", true);
+      !authenticated && buyRentEditButton?.attr("disabled", true);
 
       // Create "View More" button
       const viewMoreButton = $("<button>")
@@ -723,14 +758,14 @@ $(document).ready(function () {
         .text("View More");
 
       //set the pk to id , to be retrieved later and passed to buy and view more modals to get property detail
-      buyRentButton.attr("id", result.pk.toString());
+      buyRentEditButton?.attr("id", result.pk.toString());
       viewMoreButton.attr("id", result.pk.toString());
 
       // Append elements to resultInfo div
       resultInfo.append(title);
       resultInfo.append(infoParagraph);
       resultInfo.append(buttonsDiv);
-      buttonsDiv.append(buyRentButton);
+      buttonsDiv.append(buyRentEditButton); // ! this button actually shows either buy/rent/edit depending on the condition met
       buttonsDiv.append(viewMoreButton);
 
       // Append image and resultInfo to resultCard

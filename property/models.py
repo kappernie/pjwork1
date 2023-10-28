@@ -36,7 +36,7 @@ class Location (models.Model):
 class Property(models.Model):
 
     CURRENCY_CHOICES = (
-        ('$', '$'),
+        ('USD', 'USD'),
         ('GHS', 'GHS'),
     )
     name = models.TextField(null=True, blank=True)
@@ -47,8 +47,8 @@ class Property(models.Model):
     lister = models.ForeignKey(Lister, null=True, on_delete=models.CASCADE)
     for_rent = models.BooleanField(default=False)
     # This is the duration in months. 12, 24, 36 etc.
-    min_rent_duration = models.IntegerField(blank=True, null=True, default=12)
-    max_rent_duration = models.IntegerField(blank=True, null=True, default=36)
+    min_rent_duration = models.IntegerField(blank=True, null=True)
+    max_rent_duration = models.IntegerField(blank=True, null=True)
 
     currency = models.CharField(
         max_length=200, choices=CURRENCY_CHOICES, null=True)
@@ -72,9 +72,16 @@ class Property(models.Model):
         ]
 
 
+def get_property_images_upload_path(instance, filename):
+    # Get the property id from the instance
+    property_id = instance.property.id
+    # Return the path with the property id and the filename
+    return f"uploads/properties/{property_id}/{filename}"
+
+
 class PropertyImage(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
-    upload = models.ImageField(upload_to='uploads/')
+    upload = models.ImageField(upload_to=get_property_images_upload_path)
 
     def __str__(self):
         return f"{self.property}"

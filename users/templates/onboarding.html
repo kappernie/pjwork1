@@ -1,0 +1,22 @@
+<!-- onboarding.html -->
+{% extends "base.html" %}
+
+{% block title %}ReMarket - Agent/Owner Onboarding{% endblock %} 
+
+{% block content %}
+<h2 style="text-align: center;" class="mt-3">Submit an application to be onboarded as an Agent or Owner</h2>
+<div style="width:100%; max-width: 720px;" class="m-auto">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="input-group mt-4">
+      <label class="input-group-text" for="id_business_document">Upload your business document(s)</label>
+      {{ form.business_document }} 
+      {{ form.business_document.errors }}
+    </div>
+    <div style="padding-left: 12px;" class="mt-1 mb-5 small">Allowed file types are .pdf .dot .doc and .docx. If you have multiple files, please combine them into one file for upload.</div>
+    <div class="d-grid gap-2 col-6 mx-auto">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

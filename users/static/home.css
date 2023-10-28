@@ -5,6 +5,8 @@ body {
   padding: 0;
 }
 
+/* Bootstrap specific */
+
 /* Image Slider */
 .slider-container {
   position: relative;
