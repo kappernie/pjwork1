@@ -5,6 +5,10 @@ body {
   padding: 0;
 }
 
+.header {
+  z-index: 9000000000;
+}
+
 /* Bootstrap specific */
 
 /* Image Slider */

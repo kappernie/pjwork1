@@ -3,7 +3,7 @@ from django.db import models
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from decimal import Decimal
-
+from django.contrib import messages
 # Create your views here.
 from rest_framework import generics
 from django.contrib.auth.models import User
@@ -67,6 +67,8 @@ AGENT = 3
 
 
 def onboarding_view(request):
+    context = {}
+
     if request.method == 'POST':
         form = ListerDocumentForm(request.POST, request.FILES)
         if form.is_valid():
@@ -74,38 +76,8 @@ def onboarding_view(request):
             # Redirect to a success page or home page
     else:
         form = ListerDocumentForm()
-    return render(request, 'onboarding.html', {'form': form})
-
-
-# def property_listing_view(request, pk):
-#     if request.method == 'POST':
-#         form = PropertyForm(request.POST)
-#         image_formset = PropertyImageFormSet(request.POST, request.FILES)
-
-#         """ if property_form.is_valid() and image_formset.is_valid():
-#             # Save the property form and get the instance
-#             property = property_form.save()
-#             # Loop through the image forms and set the property instance for each one
-#             for image_form in image_formset:
-#                 # Skip empty forms
-#                 if image_form.cleaned_data:
-#                     # Get the image instance
-#                     image = image_form.save(commit=False)
-#                     # Set the property foreign key
-#                     image.property = property
-#                     # Save the image instance
-#                     image.save()
-#             # Redirect to some success page
-#             return redirect('success') """
-
-#         if form.is_valid():
-#             form.save()
-#             # Redirect to a success page or property detail page
-#     else:
-#         form = PropertyForm()
-#         image_formset = PropertyImageFormSet(
-#             queryset=PropertyImage.objects.none())
-#     return render(request, 'property_listing.html', {'form': form, 'image_formset': image_formset})
+        context['form'] = form
+        return render(request, 'onboarding.html', context=context)
 
 
 class PropertyListView(ListView):
@@ -126,33 +98,17 @@ class PropertyCreateView(CreateView):
     # print('In here')
 
     def get_context_data(self, **kwargs):
-        print(self.object)
-        print(kwargs)
         data = super().get_context_data(**kwargs)
         if self.request.POST:
-            data['images'] = PropertyImageFormSet(self.request.POST)
+            data['images'] = PropertyImageFormSet(
+                self.request.POST, self.request.FILES, prefix='property_images')
         else:
-            data['images'] = PropertyImageFormSet()
+            data['images'] = PropertyImageFormSet(prefix='property_images')
         data['lister_pk'] = self.kwargs['pk']
         return data
 
-    def post(self, request, *args, **kwargs):
-        """
-        Handle POST requests: instantiate a form instance with the passed
-        POST variables and then check if it's valid.
-        """
-        self.object = None
-        form = self.get_form()
-        # print(form.is_valid)
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-
     def form_valid(self, form):
         context = self.get_context_data()
-        print('context',  context)
-        print('form',  form)
         images = context['images']
         self.object = form.save(commit=False)
 
@@ -164,13 +120,15 @@ class PropertyCreateView(CreateView):
 
         # Associate the lister with the object
         self.object.lister = lister
-
         self.object.save()
 
-        self.object.save()
         if images.is_valid():
             images.instance = self.object
             images.save()
+
+        # messages.add_message(
+        #     self.request, messages.SUCCESS, 'New property sucessfully added'
+        # )
         return super().form_valid(form)
 
 
@@ -178,19 +136,33 @@ class PropertyUpdateView(UpdateView):
     model = Property
     form_class = PropertyForm
 
+    pk_url_kwarg = 'property_pk'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(lister=self.kwargs['pk'])
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
             data['images'] = PropertyImageFormSet(
-                self.request.POST, instance=self.object)
+                self.request.POST, self.request.FILES, instance=self.object, prefix='property_images')
         else:
-            data['images'] = PropertyImageFormSet(instance=self.object)
+            data['images'] = PropertyImageFormSet(
+                instance=self.object, prefix='property_images')
+        for image_form in data['images']:
+            # import pprint as p
+            # p.pprint(vars(image_form))
+            # Pass existing file data to the custom field
+            if image_form.instance.pk:
+                image_form.fields['upload'].existing_file = image_form.instance.upload
         return data
 
     def form_valid(self, form):
         context = self.get_context_data()
         images = context['images']
         self.object = form.save()
+
         if images.is_valid():
             images.instance = self.object
             images.save()
@@ -199,6 +171,12 @@ class PropertyUpdateView(UpdateView):
 
 class PropertyDeleteView(DeleteView):
     model = Property
+
+    pk_url_kwarg = 'property_pk'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(lister=self.kwargs['pk'])
 
 
 class PropertyDetailView(DetailView):

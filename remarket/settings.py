@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "property.apps.PropertyConfig",
     "payments.apps.PaymentsConfig",
     "settlement.apps.SettlementConfig",
+    'django_cleanup.apps.CleanupConfig',
 
     "rest_framework.authtoken",
     'django_extensions',

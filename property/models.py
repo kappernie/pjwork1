@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from users.models import Lister
 
 
@@ -56,6 +57,9 @@ class Property(models.Model):
     Location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
     is_published = models.BooleanField(default=False)
 
+    def get_absolute_url(self):
+        return reverse("listing-detail", kwargs={"pk": self.lister.pk, "property_pk": self.pk})
+
     def __str__(self):
         return f"{self.name} - {self.Location}  -  {self.currency} {self.price}"
 
@@ -80,8 +84,10 @@ def get_property_images_upload_path(instance, filename):
 
 
 class PropertyImage(models.Model):
-    property = models.ForeignKey(Property, on_delete=models.CASCADE)
-    upload = models.ImageField(upload_to=get_property_images_upload_path)
+    property = models.ForeignKey(
+        Property, on_delete=models.CASCADE, related_name='property_images')
+    upload = models.ImageField(
+        upload_to=get_property_images_upload_path, blank=True)
 
     def __str__(self):
         return f"{self.property}"

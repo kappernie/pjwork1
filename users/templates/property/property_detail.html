@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}ReMarket - Listing Detail{% endblock %} 
 
 {% block content %}
   <div class="container mt-5">
@@ -6,11 +7,15 @@
       <!-- Display other fields here -->
       
       <h3>Images</h3>
-      {% for image in object.images.all %}
-        <img src="{{ image.image.url }}" alt="Property Image">
-      {% empty %}
-        <p>No images yet.</p>
-      {% endfor %}
+      <div class="row row-cols-auto g-4">
+        {% for image in object.property_images.all %}
+          <div class="col">
+            <a href="{{image.upload.url}}" target="_blank"><img src="{{ image.upload.url }}" alt="Property Image" class="img-thumbnail img-fluid img-hover"></a>
+          </div>
+        {% empty %}
+          <p>No images yet.</p>
+        {% endfor %}
+      </div>
       <!-- Edit and Delete buttons -->
       <div class="text-center mt-3">
         <a href="{% url 'property-update' pk=object.lister.pk property_pk=object.pk %}" class="btn btn-primary">Edit</a>
@@ -20,4 +25,18 @@
         </div>
       </div>
   </div>
+
+  <!-- Add this style block to your template -->
+  {% block extra_style %}
+  <style>
+    .img-thumbnail {
+      width: 300px;
+      height: 300px;
+      object-fit: cover;
+      cursor: pointer;
+    }
+  
+  </style>
+  {% endblock %}
+
 {% endblock %}

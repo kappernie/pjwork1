@@ -1,0 +1,9 @@
+{% load i18n %}
+{% block clearable_file_input %}
+{% if widget.is_initial %}
+    <input style="max-width: 500px;" type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+    <a class="view-current-image" href="{{ widget.value.url }}" target="_blank">{{ widget.initial_text }}</a>
+{% else %}
+    <input required type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+{% endif %}
+{% endblock %}

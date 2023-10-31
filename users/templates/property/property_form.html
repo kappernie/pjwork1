@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% block title %}ReMarket - Create/Edit a listing{% endblock %} 
 
 {% block content %}
 <style>
@@ -15,16 +16,42 @@
         <h4 class="mb-1">Add image(s)</h4>
         <div class="small mb-4">You are allowed to add a maximum of 6 images</div>
         <div id="formset-container">
-            {% for image_form in images %}
-            <div class="image-form mb-3 input-group d-flex flex-nowrap gap-4 align-items-center">
-                <div class="d-flex">
-                    <label class="input-group-text" for={{ image_form.upload.auto_id }}>Upload a property image</label>
+          <div class="initial-data-true">
+              {% for image_form in images %}
+              {% if image_form.instance.pk %}
+              <div>
+                <div class="mt-3 input-group d-flex flex-nowrap gap-4 align-items-center">
+                  <div class="d-flex contents">
+                    {{image_form.id}}
+                    <label class="input-group-text" for={{ image_form.upload.auto_id }}>Change property image</label>
                     {{ image_form.upload }}
+                  </div>
                 </div>
-                <button type="button" class="btn-close remove-form-button" aria-label="Remove"></button>
+                {{ image_form.DELETE }}
               </div>
-            {% endfor %}
-          </div>
+              <hr>
+              {% endif %}
+              {% endfor %}
+            </div>
+            <div class="initial-data-false">
+              {% for image_form in images %}
+              {% if not image_form.instance.pk %}
+              <div class="image-form">
+                <div class="my-3 input-group d-flex flex-nowrap gap-4 align-items-center">
+                      <div class="d-flex">
+                          <label class="input-group-text" for={{ image_form.upload.auto_id }}>Upload a property image</label>
+                          {{image_form.id}}
+                          {{ image_form.upload }}
+                        </div>
+                        <button type="button" class="btn-close remove-form-button" aria-label="Remove"></button>
+                      </div>
+              </div>
+                      {% endif %}
+                      {% endfor %}
+            </div>
+
+            
+      </div>
           
           <div class="text-end pe-3">
             <p style="cursor: pointer;" id="add-form-button"  class="text-decoration-underline text-primary">Add more images</p>
@@ -36,6 +63,16 @@
             </div>
 
       </form>
+      <!-- Empty form-->
+      <div id="empty-form" class="hidden image-form">
+        <div  class="my-3 input-group d-flex flex-nowrap gap-4 align-items-center">
+          <div class="d-flex">
+            <label class="input-group-text" for={{ image_form.upload.auto_id }}>Upload a property image</label>
+            {{ images.empty_form.upload}}
+          </div>
+          <button type="button" class="btn-close remove-form-button" aria-label="Remove"></button>
+        </div>
+      </div>
   </div>
   <script>
     // Define a function to toggle the visibility of the rent duration fields
@@ -45,48 +82,81 @@
       // console.log(forRent)
       // If it is true, show the rent duration fields
       if (forRent) {
-          $('#min_rent_duration').show();
-          $('#min_rent_duration').prop('disabled', false);
+        $('#min_rent_duration').show();
+        $('#min_rent_duration').prop('disabled', false);
         $('label[for="min_rent_duration"]').show();
+        $('label[for="min_rent_duration"] ~ span.helptext').show();
+
         $('#max_rent_duration').show();
         $('#max_rent_duration').prop('disabled', false);
         $('label[for="max_rent_duration"]').show();
+        $('label[for="max_rent_duration"] ~ span.helptext').show();
+
         // Otherwise, hide them
     } else {
         $('#min_rent_duration').hide();
         $('#min_rent_duration').prop('disabled', true);
         $('label[for="min_rent_duration"]').hide();
+        $('label[for="min_rent_duration"] ~ span.helptext').hide();
+
+
         $('#max_rent_duration').hide();
         $('#max_rent_duration').prop('disabled', true);
         $('label[for="max_rent_duration"]').hide();
+        $('label[for="max_rent_duration"] ~ span.helptext').hide();
       }
     }
+
+    
   
     // Call the function when the page loads
     $(document).ready(function() {
-      toggleRentDuration();
-      var formsetContainer = $('#formset-container');
+      // remove the .input-file-custom class from the empty form
+      $('#empty-form input[type="file"]').removeClass('input-file-custom')
+
+      var formsetContainer = $('#formset-container')
+      {% comment %} var initialFormset = $('#formset-container .intial-data-true .image-form');{% endcomment %}
+      var newFormset = $('#formset-container .initial-data-false'); 
       var addFormButton = $('#add-form-button');
-      var totalFormsInput = $('#id_images-TOTAL_FORMS');
+      var totalFormsInput = $('#id_property_images-TOTAL_FORMS');
+      var initialForms = parseInt($('#id_property_images-INITIAL_FORMS').val())
+        // Show the add form button if we're under the max number of forms
+        if (($('.input-file-custom').length) < {{ images.max_num }}) {
+            addFormButton.show();
+        }
+        // Hide the add form button if we've reached the max number of forms
+        if (($('.input-file-custom').length) >= {{ images.max_num }}) {
+          addFormButton.hide();
+      }
+      toggleRentDuration();
+     
 
         // Update the total forms input value
         function updateTotalForms() {
-            var totalForms = formsetContainer.children().length;
+            var totalForms = ($('.input-file-custom').length);
             totalFormsInput.val(totalForms);
         }
 
         // Add form button click handler
         addFormButton.click(function() {
-            // Get the last image form
-            var lastImageForm = formsetContainer.children().last();
+            // clone the emptyform
+            var newImageForm = $('#empty-form').clone();
 
-            // Clone it and append it to the formset container
-            var newImageForm = lastImageForm.clone();
-            formsetContainer.append(newImageForm);
+            // remove hidden class
+            newImageForm.removeClass('hidden')
+            // remove id
+            newImageForm.removeAttr('id')
+            //add the .input-custom-class
+            newImageForm.addClass('input-file-custom')
+            
+            newFormset.append(newImageForm);
+
+            {% comment %} console.log(initialFormset.children().length) {% endcomment %}
 
             // Generate a unique ID for the new form
-            var uniqueId = 'id_propertyimage_set-' + (formsetContainer.children().length - 1) + '-upload';
-            var uniqueIdName = 'propertyimage_set-' + (formsetContainer.children().length - 1) + '-upload';
+            var uniqueId = 'id_property_images-' + ($('.input-file-custom').length - 1) + '-upload';
+            
+            var uniqueIdName = 'property_images-' + ($('.input-file-custom').length - 1) + '-upload';
 
             // Update the ID and name of the file input in the new form
             newImageForm.find('input[type="file"]').attr('id', uniqueId).attr('name', uniqueIdName);
@@ -101,7 +171,7 @@
             updateTotalForms();
 
             // Hide the add form button if we've reached the max number of forms
-            if (formsetContainer.children().length >= {{ images.max_num }}) {
+            if (($('.input-file-custom').length) >= {{ images.max_num }}) {
                 addFormButton.hide();
             }
         });
@@ -110,23 +180,25 @@
        // Remove form button click handler
         formsetContainer.on('click', '.remove-form-button', function() {
             // Only remove the form if there is more than one
-            if (formsetContainer.children().length > 1) {
+            if (($('.input-file-custom').length) > 1) {
                 // Remove the parent image form
-                $(this).parent().remove();
+                $(this).parent().parent().remove();
 
                 // Update the total forms input value
                 updateTotalForms();
 
                 // Update the ID and name attributes of the remaining forms
-                formsetContainer.children().each(function(index, element) {
-                    var uniqueId = 'id_propertyimage_set-' + index + '-upload';
-                    var uniqueIdName = 'propertyimage_set-' + index + '-upload';
+                
+
+                newFormset.children().each(function(index, element) {
+                    var uniqueId = 'id_property_images-' + ( initialForms + index) + '-upload';
+                    var uniqueIdName = 'property_images-' + (initialForms + index ) + '-upload';
                     $(element).find('input[type="file"]').attr('id', uniqueId).attr('name', uniqueIdName);
                     $(element).find('label').attr('for', uniqueId);
                 });
 
                 // Show the add form button if we're under the max number of forms
-                if (formsetContainer.children().length < {{ images.max_num }}) {
+                if ($('.input-file-custom').length < {{ images.max_num }}) {
                     addFormButton.show();
                 }
             }
@@ -139,4 +211,39 @@
       toggleRentDuration();
     });
   </script>
+   <!-- Add this style block to your template -->
+   {% block extra_style %}
+   <style>
+     .image-edit-img{
+       width: 250px;
+       height: 250px;
+       object-fit: cover;
+       cursor: pointer;
+       transition: all 2s ease-in-out;
+     }
+
+     .image-form::after {
+        content: "";
+        display: block;
+        border-top: 1px solid #000; /* Change color as needed */
+        width: 100%;
+        opacity: 0.25;
+      }
+      
+
+     .hidden {
+      display: none!important;
+     }
+
+     a.view-current-image {
+      flex-grow: 1;
+      align-self: center;
+      padding-left: 15px
+     }
+
+     .contents {
+      width: 100%;
+     }
+   </style>
+   {% endblock %}
 {% endblock %}
