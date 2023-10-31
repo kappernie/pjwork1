@@ -26,7 +26,7 @@ from payments import urls
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from users.views import RealtorBankDetailsViewSet, GetLocationPriceTypeNamesAndIds, PropertyListingViewSet, ViewSettlementTransactionDataViewSet, property_search_sort_filter, landing_page, onboarding_view, PropertyListView, PropertyCreateView, PropertyUpdateView, PropertyDeleteView, PropertyDetailView
+from users.views import RealtorBankDetailsViewSet, GetLocationPriceTypeNamesAndIds, PropertyListingViewSet, ViewSettlementTransactionDataViewSet, property_search_sort_filter, landing_page, onboarding_view, verificationprogress_view, PropertyListView, PropertyCreateView, PropertyUpdateView, PropertyDeleteView, PropertyDetailView
 
 
 router = DefaultRouter()
@@ -70,7 +70,9 @@ urlpatterns = [
     path('logout', user_logout, name='user_logut'),
     path('register', UserRegisterView.as_view(), name='register'),
     path('reset-password/', custom_password_reset_view, name='reset-password'),
-    path('onboarding/', onboarding_view, name='onboarding'),
+    path('onboarding/<int:pk>', onboarding_view, name='onboarding'),
+    path('verification-progress/', verificationprogress_view,
+         name='verification-progress'),
     path('listers/<int:pk>/properties',
          PropertyListView.as_view(), name='property-list'),
     path('listers/<int:pk>/properties/create',

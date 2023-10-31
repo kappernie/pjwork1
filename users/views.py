@@ -1,7 +1,7 @@
 from typing import Any
 from django.db import models
-from django.http import Http404
-from django.shortcuts import render, get_object_or_404
+from django.http import Http404, HttpResponse
+from django.shortcuts import redirect, render, get_object_or_404
 from decimal import Decimal
 from django.contrib import messages
 from django.urls import reverse
@@ -68,18 +68,36 @@ OWNER = 2
 AGENT = 3
 
 
-def onboarding_view(request):
+def onboarding_view(request, pk):
     context = {}
 
+    try:
+        lister = Lister.objects.get(pk=pk)
+    except Lister.DoesNotExist:
+        return HttpResponse('Lister not found', status=404)
+
     if request.method == 'POST':
-        form = ListerDocumentForm(request.POST, request.FILES)
+        form = ListerDocumentForm(request.POST, request.FILES, instance=lister)
         if form.is_valid():
             form.save()
             # Redirect to a success page or home page
+            return redirect('verification-progress')
     else:
-        form = ListerDocumentForm()
+        form = ListerDocumentForm(instance=lister)
         context['form'] = form
-        return render(request, 'onboarding.html', context=context)
+        # check if the user has submitted their documents but is still unverified
+        if lister.business_document and not lister.onboarding_completed:
+            return redirect('verification-progress')
+        # if user is verified, show them the verification successfully completed page. Login again to gain
+        # full functionality
+        elif lister.onboarding_completed:
+            return render(request, 'verification_complete.html')
+        else:
+            return render(request, 'onboarding.html', context=context)
+
+
+def verificationprogress_view(request):
+    return render(request, 'verification_progress.html')
 
 
 class PropertyListView(ListView):

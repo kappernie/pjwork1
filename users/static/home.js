@@ -133,7 +133,7 @@ function viewMoreEventHandler(event, viewMoreButton) {
     other_details.innerHTML = ` Description : ${data.description}`;
 
     data.propertyimages.forEach((propertyimage) => {
-      pictures.innerHTML += `<div class="carousel-item active"><img src=${propertyimage} class="d-block w-100" alt="Gallery Image 1"></div>`;
+      pictures.innerHTML += `<div class="carousel-item active"><img style="object-fit: cover;" src=${propertyimage} class="d-block w-100" alt="Gallery Image 1"></div>`;
     });
 
     // update the values in the generic viewmoremodal
@@ -603,26 +603,30 @@ $(document).ready(function () {
     header.innerHTML = `<li class="profile-name">
       <a href="http://localhost:1738/">Welcome ${data.first_name}</a>
     </li>`;
-    header.innerHTML += `
-   ${
-     (userData?.user_type === OWNER || userData?.user_type === AGENT) &&
-     !userData?.onboarded
-       ? `<li>
-       <a href="http://localhost:1738/onboarding/">Onboarding</a>
-     </li>`
-       : `
-          <li>
-            <a href="http://localhost:1738/listers/${userData?.pk}/properties">Listings</a>
-          </li>
-    `
-   }
-   <li>
+    if (userData?.user_type === OWNER || userData?.user_type === AGENT) {
+      if (!userData?.onboarded) {
+        header.innerHTML += `<li>
+       <a href="http://localhost:1738/onboarding/${userData?.pk}">Onboarding</a>
+     </li>`;
+      } else if (userData?.onboarded) {
+        header.innerHTML += `<li>
+          <a href="http://localhost:1738/listers/${userData?.pk}/properties">Listings</a>
+        </li>`;
+      }
+      header.innerHTML += `<li>
       <a href="#"><i class="bi bi-bag" id="purchased"></i></a>
     </li>
     <li>
       <a href="#"><i class="bi bi-box-arrow-right" id="logout"></i></a>
+    </li>`;
+    } else {
+      header.innerHTML += `<li>
+      <a href="#"><i class="bi bi-bag" id="purchased"></i></a>
     </li>
-    `;
+    <li>
+      <a href="#"><i class="bi bi-box-arrow-right" id="logout"></i></a>
+    </li>`;
+    }
 
     const logout = document.querySelector("#logout");
     logout.addEventListener("click", function () {
@@ -1063,6 +1067,7 @@ $(document).ready(function () {
     const searchValue = document.querySelector(".search-field").value;
     query = `http://localhost:1738/search?search=${searchValue}`;
     // &location=${location}&type=${type}
+    const userData = JSON.parse(localStorage.getItem("remarket"));
     $.get(query, function (data) {
       console.log(data);
       //   // Parse the JSON response
@@ -1114,12 +1119,27 @@ $(document).ready(function () {
 
         // Create "Buy or Rent" button
         // Text is Buy if for_rent is false, else text is Rent
-        const buyRentButton = result?.for_rent
-          ? $("<button>").addClass("buy-rent-button").text("Rent")
-          : $("<button>").addClass("buy-rent-button").text("Buy");
+        const buyRentEditButton = (() => {
+          if (
+            (userData?.user_type === OWNER || userData?.user_type === AGENT) &&
+            result?.lister_id === userData?.pk
+          ) {
+            return $("<a>")
+              .text("Edit")
+              .attr(
+                "href",
+                `/listers/${userData?.pk}/properties/${result?.pk}/edit`
+              )
+              .addClass("edit-button");
+          } else if (userData?.user_type === RENTER) {
+            return result?.for_rent
+              ? $("<button>").addClass("buy-rent-button").text("Rent")
+              : $("<button>").addClass("buy-rent-button").text("Buy");
+          }
+        })();
 
         // Disable buttons if the user is not signed in
-        !authenticated && buyRentButton.attr("disabled", true);
+        !authenticated && buyRentEditButton.attr("disabled", true);
 
         // Create "View More" button
         const viewMoreButton = $("<button>")
@@ -1127,13 +1147,13 @@ $(document).ready(function () {
           .text("View More");
 
         //set the pk to id , to be retrieved later and passed to buy and view more modals to get property detail
-        buyRentButton.attr("id", result.pk.toString());
+        buyRentEditButton.attr("id", result.pk.toString());
         viewMoreButton.attr("id", result.pk.toString());
         // Append elements to resultInfo div
         resultInfo.append(title);
         resultInfo.append(infoParagraph);
         resultInfo.append(buttonsDiv);
-        buttonsDiv.append(buyRentButton);
+        buttonsDiv.append(buyRentEditButton);
         buttonsDiv.append(viewMoreButton);
 
         // Append image and resultInfo to resultCard

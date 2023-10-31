@@ -123,3 +123,6 @@ class PropertyForm(forms.ModelForm):
             'min_rent_duration': 'Please enter the value in months. (Num of years x 12, e.g 2 years = 2 x 12 = 24)',
             'max_rent_duration': 'Please enter the value in months. (Num of years x 12, e.g 2 years = 2 x 12 = 24)',
         }
+        labels = {
+            'is_published': 'List this property as published?'
+        }

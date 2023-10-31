@@ -5,12 +5,13 @@ from users.models import Lister
 
 class PropertyType(models.Model):
     TYPE_CHOICES = (
-        ('1B', '1 Bedroom'),
-        ('2B', '2 Bedroom'),
+        ('1B', '1 Bedroom House'),
+        ('2B', '2 Bedroom House'),
+        ('3B', '3 Bedroom House'),
         ('CA', 'Commercial Apartment'),
         ('MT', 'Mortgage Apartment'),
-        ('4S', 'For Sale'),
-        ('4R', 'For Rent'),
+        ('1BSC', '1 Bedroom Self-Contained'),
+        ('2BSC', '2 Bedroom Self-Contained'),
     )
     type = models.CharField(max_length=200, choices=TYPE_CHOICES)
 
@@ -37,7 +38,6 @@ class Location (models.Model):
 class Property(models.Model):
 
     CURRENCY_CHOICES = (
-        ('USD', 'USD'),
         ('GHS', 'GHS'),
     )
     name = models.TextField(null=True, blank=True)
