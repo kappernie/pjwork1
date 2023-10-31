@@ -4,8 +4,10 @@ from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from decimal import Decimal
 from django.contrib import messages
+from django.urls import reverse
 # Create your views here.
 from rest_framework import generics
+from django.db.models.signals import post_delete
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -174,9 +176,24 @@ class PropertyDeleteView(DeleteView):
 
     pk_url_kwarg = 'property_pk'
 
+    def get_success_url(self):
+        # Get the current instance id.
+        pk = self.object.lister.id
+
+        # Pass the instance id as a kwarg to the success url.
+        success_url = reverse('property-list', kwargs={'pk': pk})
+
+        return success_url
+
     def get_queryset(self):
         queryset = super().get_queryset()
         return queryset.filter(lister=self.kwargs['pk'])
+
+    def form_valid(self, form):
+        images = self.object.property_images.all()
+        for image in images:
+            image.delete()
+        return super().form_valid(form)
 
 
 class PropertyDetailView(DetailView):

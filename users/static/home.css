@@ -140,6 +140,7 @@ body {
   margin-top: 20px;
 }
 
+a.edit-button,
 .buttons button {
   margin-right: 10px;
   padding: 10px 20px;
@@ -147,6 +148,10 @@ body {
   color: white;
   border: none;
   cursor: pointer;
+}
+
+a.edit-button {
+  text-decoration: none;
 }
 
 .buy-rent-button:disabled {

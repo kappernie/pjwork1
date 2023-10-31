@@ -740,7 +740,13 @@ $(document).ready(function () {
           (userData?.user_type === OWNER || userData?.user_type === AGENT) &&
           result?.lister_id === userData?.pk
         ) {
-          return $("<button>").text("Edit");
+          return $("<a>")
+            .text("Edit")
+            .attr(
+              "href",
+              `/listers/${userData?.pk}/properties/${result?.pk}/edit`
+            )
+            .addClass("edit-button");
         } else if (userData?.user_type === RENTER) {
           return result?.for_rent
             ? $("<button>").addClass("buy-rent-button").text("Rent")

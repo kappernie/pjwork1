@@ -2,10 +2,13 @@
 {% block title %}ReMarket - Confirm Deletion{% endblock %} 
 
 {% block content %}
-  <h2>Delete {{ object.name }}?</h2>
-  <form method="post">
-    {% csrf_token %}
-    Are you sure you want to delete "{{ object.name }}"?
-    <button type="submit">Yes, delete</button>
-  </form>
+  <div class="container mt-5 p-5">
+    <h2>Delete {{ object.name }}?</h2>
+    <form method="post">
+      {% csrf_token %}
+      <p>Are you sure you want to delete "{{ object.name }}"?</p>
+      <button type="submit" class="btn btn-danger">Yes, delete</button>
+      <button type="button" class="btn btn-primary" onclick="history.back()">No, cancel</button>
+    </form>
+  </div>
 {% endblock %}
