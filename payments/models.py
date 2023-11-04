@@ -20,7 +20,7 @@ class Payment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.renter.user.username} - ${self.amount} - {self.created}- {self.settled}"
+        return f"{self.renter.user.username} - GHS{self.amount} - {self.created_at}- {self.settled}"
 
 
 class Plan(models.Model):
@@ -28,10 +28,12 @@ class Plan(models.Model):
     # status
     QUARTERLY = 1
     BIANUALLY = 2
+    MONTHLY = 3
 
     INTERVALS = [
         (QUARTERLY, 'Quarterly'),
-        (BIANUALLY, 'Binually'),
+        (BIANUALLY, 'Bianually'),
+        (MONTHLY, 'Monthly'),
     ]
 
     property = models.ForeignKey(Property, on_delete=models.CASCADE)
@@ -50,6 +52,9 @@ class Plan(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f'{self.plan_code}'
 
 
 class PaymentSubscription(models.Model):
@@ -79,7 +84,10 @@ class PaymentSubscription(models.Model):
     email_token = models.CharField(max_length=512, null=True, blank=True)
     start_date = models.DateTimeField(blank=True, null=True)
     num_of_payments_made = models.SmallIntegerField(default=0)
-    next_payment_date = models.IntegerField(blank=True, null=True)
+    next_payment_date = models.DateTimeField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f'{self.subscription_code} - {self.plan.plan_code}'

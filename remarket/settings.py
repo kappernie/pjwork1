@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-w+s*+%j!n&oi$&te*^%vs)x!1u!xh(bxc)+_h$r@#96j)5=agb"
+PAYSTACK_SECRET = "sk_test_ec412a92f460b8baa23949d18b9256deca79b4f4"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -174,4 +175,5 @@ EMAIL_HOST_USER = 'your-gmail-email@gmail.com'  # Your Gmail email address
 # Your Gmail password or an app-specific password
 EMAIL_HOST_PASSWORD = 'your-gmail-password'
 
-PROPERTY_RECURRING_PAYMENT_PERCENTAGE = 0.05
+PROPERTY_RENT_RECURRING_PAYMENT_PERCENTAGE = 0.05
+PROPERTY_BUY_RECURRING_PAYMENT_PERCENTAGE = 0.05

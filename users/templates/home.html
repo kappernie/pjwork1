@@ -1,6 +1,19 @@
 {% extends "base.html" %} 
 
 {% block content %}
+<div class="modal" tabindex="-1" id="loading-screen">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="slider-container">
   <div class="slider">
     <!-- <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80" alt="Image 2"> -->
@@ -279,7 +292,7 @@
                 value="1"
                 required
               />
-              <label class="form-check-label" for="renterRadio"> Renter </label>
+              <label class="form-check-label" for="renterRadio"> Client </label>
             </div>
             <div class="form-check form-check-inline">
               <input

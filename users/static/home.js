@@ -3,6 +3,50 @@ const RENTER = 1;
 const OWNER = 2;
 const AGENT = 3;
 
+const showModal = (response, data = {}) => {
+  // Create a new modal
+  var newModalEl = document.createElement("div");
+  newModalEl.classList.add("modal");
+  newModalEl.style.marginTop = "100px";
+  newModalEl.setAttribute("tabindex", "-1");
+
+  // Create the modal dialog
+  var modalDialogEl = document.createElement("div");
+  modalDialogEl.classList.add("modal-dialog");
+  newModalEl.appendChild(modalDialogEl);
+
+  // Create the modal content
+  var modalContentEl = document.createElement("div");
+  modalContentEl.classList.add("modal-content");
+  modalDialogEl.appendChild(modalContentEl);
+
+  modalContentEl.innerHTML += `<div class="modal-header">
+  <h5 class="modal-title">Payment Verification Status</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>`;
+
+  // Create the modal body
+  var modalBodyEl = document.createElement("div");
+  modalBodyEl.classList.add("modal-body");
+  modalContentEl.appendChild(modalBodyEl);
+
+  // Add the success or error message to the modal body
+  if (response?.data?.success) {
+    modalBodyEl.innerHTML =
+      "<p>Payment verification successful.</p> <p>An email will be sent with the payment schedule.</p>";
+  } else {
+    modalBodyEl.innerHTML =
+      '<p>Something went wrong.</p><button id="retryVerify" class="btn btn-primary">Retry</button>';
+  }
+
+  // Append the new modal to the body
+  document.body.appendChild(newModalEl);
+
+  // Show the new modal
+  var newModal = new bootstrap.Modal(newModalEl);
+  newModal.show();
+};
+
 const toastHTML = `<!-- Toast container -->
 <div
   class="position-absolute p-3 top-0 start-50 translate-middle"
@@ -398,6 +442,7 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
 
   const paymentPlan = formData.get("payment-plan");
   const oneTimeRentAmt = getOneTimeRentData()?.amount;
+
   // console.log(data.get("email-address"));
   // for (const [key, value] of formData) {
   //   console.log(key, value);
@@ -413,6 +458,21 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
 
         onSuccess: (transaction) => {
           console.log(transaction);
+          // close all active modals
+          var modalEl = document.querySelectorAll(".modal");
+          modalEl.forEach(function (modal) {
+            bootstrap.Modal.getInstance(modal)?.hide();
+          });
+
+          // Show the loading screen
+          var loadingScreen = new bootstrap.Modal(
+            document.getElementById("loading-screen"),
+            {
+              backdrop: "static",
+              keyboard: false,
+            }
+          );
+          loadingScreen.show();
           axios
             .post(
               "http://localhost:1738/payments/onetime?for_rent=true",
@@ -434,6 +494,8 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
             )
             .then((response) => {
               console.log(response.data);
+              loadingScreen.hide();
+              showModal(response);
             });
         },
         onCancel: () => {
@@ -447,9 +509,25 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
         email: emailAddress.value,
         amount: apiResponse?.down_payment_amt * 100,
         currency: "GHS",
+        channels: ["card"],
 
         onSuccess: (transaction) => {
           console.log(transaction);
+          // close all active modals
+          var modalEl = document.querySelectorAll(".modal");
+          modalEl.forEach(function (modal) {
+            bootstrap.Modal.getInstance(modal)?.hide();
+          });
+
+          // Show the loading screen
+          var loadingScreen = new bootstrap.Modal(
+            document.getElementById("loading-screen"),
+            {
+              backdrop: "static",
+              keyboard: false,
+            }
+          );
+          loadingScreen.show();
           axios
             .post(
               "http://localhost:1738/payments/recurring?for_rent=true",
@@ -472,6 +550,18 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
             )
             .then((response) => {
               console.log(response.data);
+              loadingScreen.hide();
+              showModal(response, {
+                property_id: apiResponse?.pk,
+                reference: transaction?.trxref,
+                currency: "GHS",
+                duration: duration.value,
+                interval: billingInterval.value,
+                emailAddress: emailAddress.value,
+                firstName: firstName.value,
+                lastName: lastName.value,
+                amount: apiResponse?.down_payment_amt,
+              });
             });
         },
         onCancel: () => {
@@ -490,6 +580,21 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
 
         onSuccess: (transaction) => {
           console.log(transaction);
+          // close all active modals
+          var modalEl = document.querySelectorAll(".modal");
+          modalEl.forEach(function (modal) {
+            bootstrap.Modal.getInstance(modal)?.hide();
+          });
+
+          // Show the loading screen
+          var loadingScreen = new bootstrap.Modal(
+            document.getElementById("loading-screen"),
+            {
+              backdrop: "static",
+              keyboard: false,
+            }
+          );
+          loadingScreen.show();
           axios
             .post(
               "http://localhost:1738/payments/onetime?for_rent=false",
@@ -510,6 +615,8 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
             )
             .then((response) => {
               console.log(response.data);
+              loadingScreen.hide();
+              showModal(response);
             });
         },
         onCancel: () => {
@@ -523,9 +630,25 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
         email: emailAddress.value,
         amount: apiResponse?.down_payment_amt * 100,
         currency: "GHS",
+        channels: ["card"],
 
         onSuccess: (transaction) => {
           console.log(transaction);
+          // close all active modals
+          var modalEl = document.querySelectorAll(".modal");
+          modalEl.forEach(function (modal) {
+            bootstrap.Modal.getInstance(modal)?.hide();
+          });
+
+          // Show the loading screen
+          var loadingScreen = new bootstrap.Modal(
+            document.getElementById("loading-screen"),
+            {
+              backdrop: "static",
+              keyboard: false,
+            }
+          );
+          loadingScreen.show();
           axios
             .post(
               "http://localhost:1738/payments/recurring?for_rent=false",
@@ -547,6 +670,8 @@ function payWithPaystack(e, getApiResponse, getOneTimeRentData) {
             )
             .then((response) => {
               console.log(response.data);
+              loadingScreen.hide();
+              showModal(response);
             });
         },
         onCancel: () => {
@@ -562,6 +687,7 @@ let authenticated = Boolean(Cookies.get("remarket"));
 
 $(document).ready(function () {
   // replace dynamically generated elements with exisiting static ones
+
   $("#buyRentModal").on("hidden.bs.modal", function () {
     $("#paymentForm").html(`<div class="row mb-2">
     <div class="form-group col">
