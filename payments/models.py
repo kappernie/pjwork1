@@ -76,8 +76,8 @@ class PaymentSubscription(models.Model):
     ]
 
     down_payment = models.OneToOneField(
-        Payment, on_delete=models.PROTECT)
-    customer = models.ForeignKey(Renter, on_delete=models.PROTECT)
+        Payment, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Renter, on_delete=models.CASCADE)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     status = models.SmallIntegerField(choices=STATUSES, default=ACTIVE)
     subscription_code = models.CharField(max_length=512, null=True, blank=True)

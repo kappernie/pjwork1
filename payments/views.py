@@ -254,9 +254,11 @@ class RecurringPayment(APIView):
                 total_amt_at_end_of_sub = remaining_months * property.price * \
                     Decimal(
                         str(1 + settings.PROPERTY_RENT_RECURRING_PAYMENT_PERCENTAGE))
+                
                 onetime_payment_amt = duration * property.price
 
                 amt_per_sub_interval = total_amt_at_end_of_sub / invoice_limit
+                
                 plan_name = f'Recurring_4_Rent_{data.get("emailAddress")}_{property.pk}_limit_{invoice_limit}'
 
                 plan_data = create_plan(

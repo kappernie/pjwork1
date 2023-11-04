@@ -149,7 +149,7 @@ class PropertyCreateView(CreateView):
         # messages.add_message(
         #     self.request, messages.SUCCESS, 'New property sucessfully added'
         # )
-        return super().form_valid(form)
+        return super().form_valid(form) # redirects the user to the property detail page
 
 
 class PropertyUpdateView(UpdateView):
@@ -211,7 +211,7 @@ class PropertyDeleteView(DeleteView):
         images = self.object.property_images.all()
         for image in images:
             image.delete()
-        return super().form_valid(form)
+        return super().form_valid(form) # redirect user to success page
 
 
 class PropertyDetailView(DetailView):
