@@ -86,7 +86,7 @@ class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
         fields = ['pk', 'name', 'location_text', 'price', 'down_payment_amt', 'currency', 'for_rent', 'lister_phone', 'lister_id', 'min_rent_duration', 'max_rent_duration',
-                  'description', 'Location', 'property_types', 'propertyimages']
+                  'description', 'Location', 'property_types', 'property_types_text', 'propertyimages']
 
 
 class MultiplePropertyImageUploadSerializer(serializers.Serializer):

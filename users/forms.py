@@ -105,24 +105,24 @@ class PropertyForm(forms.ModelForm):
 
     class Meta:
         model = Property
-        fields = ['name', 'location_text', 'property_types', 'price', 'for_rent', 'min_rent_duration',
-                  'max_rent_duration', 'currency', 'description', 'Location', 'is_published']
+        fields = ['name', 'location_text', 'property_types_text', 'price', 'for_rent', 'min_rent_duration',
+                  'max_rent_duration', 'currency', 'description', 'property_document']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'for_rent': forms.CheckboxInput(attrs={'id': 'for_rent'}),
-            'location_text': forms.TextInput(attrs={'class': 'form-control'}),
-            'property_types': forms.Select(attrs={'class': 'form-select'}),
+            'location_text': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
+            'property_types_text': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'min_rent_duration': forms.NumberInput(attrs={'class': 'form-control', 'id': 'min_rent_duration'}),
             'max_rent_duration': forms.NumberInput(attrs={'class': 'form-control', 'id': 'max_rent_duration'}),
             'currency': forms.Select(attrs={'class': 'form-select'}),
             'description': forms.Textarea(attrs={'class': 'form-control'}),
-            'Location': forms.Select(attrs={'class': 'form-select'}),
         }
         help_texts = {
             'min_rent_duration': 'Please enter the value in months. (Num of years x 12, e.g 2 years = 2 x 12 = 24)',
             'max_rent_duration': 'Please enter the value in months. (Num of years x 12, e.g 2 years = 2 x 12 = 24)',
         }
         labels = {
-            'is_published': 'List this property as published?'
+            "location_text": 'Location',
+            'property_types_text': 'Property type'
         }

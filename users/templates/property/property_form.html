@@ -11,7 +11,34 @@
   <div class="container p-5 mt-5">
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+        {% if not form.instance.pk %}
+        {% if field.name == "property_document" %}
+        <div class="input-group mb-3">
+          <label class="input-group-text" for="{{field.id_for_label}}">Upload the property document</label>
+          <input type="file" name="{{field.name}}" class="form-control" id="{{field.id_for_label}}">
+        </div>
+        {% else %}
+        <p>
+          {{field.label_tag}}
+          {{field}}
+          <span class="helptext">{{field.help_text}}</span>
+        </p>
+        {% endif %}
+        {% else %}
+        {% if field.name == "property_document" %}
+        <div class="input-group mb-3">
+          <a href="http://localhost:1738/media/{{field.value}}" target="_blank" rel="noopener noreferrer">View Property Document</a>
+        </div>
+        {% else %}
+        <p>
+          {{field.label_tag}}
+          {{field}}
+          <span class="helptext">{{field.help_text}}</span>
+        </p>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
         {{ images.management_form }}
         <h4 class="mb-1">Add image(s)</h4>
         <div class="small mb-4">You are allowed to add a maximum of 6 images</div>

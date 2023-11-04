@@ -115,9 +115,9 @@ function viewMoreEventHandler(event, viewMoreButton) {
     } ${new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: data?.currency || "GHS",
-    }).format(data.price)} <br> Type: ${data.property_types}, Phone Number: ${
-      data?.["lister_phone"]
-    } <br> ${
+    }).format(data.price)} <br> Type: ${
+      data.property_types_text ?? data.property_types
+    }, Phone Number: ${data?.["lister_phone"]} <br> ${
       data?.for_rent
         ? `Minimum Allowed Rent Duration: ${convertMonths(
             data?.min_rent_duration
@@ -718,7 +718,7 @@ $(document).ready(function () {
           style: "currency",
           currency: result?.currency || "GHS",
         }).format(result.price)} <br> Type: ${
-          result.property_types
+          result.property_types_text ?? result.property_types
         }, Phone Number: ${result?.["lister_phone"]} <br> ${
           result?.for_rent
             ? `Minimum Allowed Rent Duration: ${convertMonths(
@@ -1098,7 +1098,7 @@ $(document).ready(function () {
             style: "currency",
             currency: result?.currency || "GHS",
           }).format(result.price)} <br> Type: ${
-            result.property_types
+            result.property_types_text ?? result.property_types
           }, Phone Number: ${result?.["lister_phone"]} <br> ${
             result?.for_rent
               ? `Minimum Allowed Rent Duration: ${convertMonths(
@@ -1147,8 +1147,8 @@ $(document).ready(function () {
           .text("View More");
 
         //set the pk to id , to be retrieved later and passed to buy and view more modals to get property detail
-        buyRentEditButton.attr("id", result.pk.toString());
-        viewMoreButton.attr("id", result.pk.toString());
+        buyRentEditButton?.attr("id", result.pk.toString());
+        viewMoreButton?.attr("id", result.pk.toString());
         // Append elements to resultInfo div
         resultInfo.append(title);
         resultInfo.append(infoParagraph);

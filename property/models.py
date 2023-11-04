@@ -44,6 +44,8 @@ class Property(models.Model):
     location_text = models.CharField(max_length=200,  null=True, blank=True)
     property_types = models.ForeignKey(
         PropertyType, on_delete=models.CASCADE,  null=True, blank=True)
+    property_types_text = models.CharField(
+        max_length=255,  null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     lister = models.ForeignKey(Lister, null=True, on_delete=models.CASCADE)
     for_rent = models.BooleanField(default=False)
@@ -54,8 +56,11 @@ class Property(models.Model):
     currency = models.CharField(
         max_length=200, choices=CURRENCY_CHOICES, null=True)
     description = models.TextField(max_length=10000, null=True, blank=True)
-    Location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
+    Location = models.ForeignKey(
+        Location, on_delete=models.CASCADE, null=True, blank=True)
     is_published = models.BooleanField(default=False)
+    property_document = models.FileField(
+        upload_to='uploads/documents/property',  null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse("listing-detail", kwargs={"pk": self.lister.pk, "property_pk": self.pk})

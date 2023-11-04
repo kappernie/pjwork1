@@ -11,24 +11,44 @@
     </div>
     <!-- Properties table -->
     <table class="table table-striped">
-      {% for property in object_list %}
+      <!-- Table header -->
+      <thead>
         <tr>
-          <!-- Property name -->
-          <td><a href="{% url 'listing-detail' pk=property.lister.pk property_pk=property.pk %}">{{ property.name }}</a></td>
-          <!-- Edit button -->
-          <td>
-            <a href="{% url 'property-update' pk=property.lister.pk property_pk=property.pk %}" class="btn btn-secondary">Edit</a>
-          </td>
-          <!-- Delete button -->
-          <td>
-            <a href="{% url 'property-delete' pk=property.lister.pk property_pk=property.pk %}" class="btn btn-danger">Delete</a>
-          </td>
+          <th scope="col">Property Name</th>
+          <th scope="col">Published</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
         </tr>
-      {% empty %}
-        <tr>
-          <td colspan="3">No properties yet.</td>
-        </tr>
-      {% endfor %}
+      </thead>
+      <tbody>
+        {% for property in object_list %}
+          <tr>
+            <!-- Property name -->
+            <td><a href="{% url 'listing-detail' pk=property.lister.pk property_pk=property.pk %}">{{ property.name }}</a></td>
+            <td style="padding-left:3%">
+              {% if property.is_published %}
+                <span style="font-size: 20px;" class="text-success"><b>✓</b></span> <!-- Green checkmark -->
+              {% else %}
+                <span style="font-size: 20px;" class="text-danger"><b>✗</b></span> <!-- Red X -->
+              {% endif %}
+            </td>
+            <!-- Edit button -->
+            <td>
+              <a href="{% url 'property-update' pk=property.lister.pk property_pk=property.pk %}" class="btn btn-secondary">Edit</a>
+            </td>
+            <!-- Delete button -->
+            <td>
+              <a href="{% url 'property-delete' pk=property.lister.pk property_pk=property.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+            <!-- Published status -->
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">No properties yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
     </table>
+    
   </div>
 {% endblock %}
