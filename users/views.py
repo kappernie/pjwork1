@@ -515,6 +515,9 @@ def property_search_sort_filter(request):
         properties = properties.filter(
             Q(name__icontains=search_query) | Q(
                 description__icontains=search_query)
+            | Q(
+                location_text__icontains=search_query) | Q(
+                Location__city__icontains=search_query)
         )
 
     # Sorting based on URL query parameter 'ordering' (default to price ascending)
